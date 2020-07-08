@@ -492,6 +492,8 @@ class Message extends Component {
     const actionsEnabled =
       message && message.type === 'regular' && message.status === 'received';
 
+    console.log(message);
+
     const MessageUIComponent = this.props.Message;
     return (
       MessageUIComponent && (
