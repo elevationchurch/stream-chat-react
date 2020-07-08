@@ -49,6 +49,7 @@ class App extends Component {
   }
 
   render() {
+    console.log(this.channel);
     return (
       <>
         <div className="example-video-container">
