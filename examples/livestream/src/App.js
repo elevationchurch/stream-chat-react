@@ -7,12 +7,13 @@ import {
   MessageList,
   MessageInput,
   MessageInputLarge,
+  MessageInputSmall,
   MessageLivestream,
   ChannelHeader,
   Thread,
   Window,
-} from 'stream-chat-react';
-import 'stream-chat-react/dist/css/index.css';
+} from '@elevationdigital/stream-chat-react';
+import '@elevationdigital/stream-chat-react/dist/css/index.css';
 import './App.css';
 
 import video from './assets/video.png';
@@ -55,15 +56,17 @@ class App extends Component {
             <img src={video} alt="fake video" />
           </div>
         </div>
-        <div>
-          <Chat client={this.chatClient} theme={`livestream ${theme}`}>
+        <div className="fix-pos max-vw-28 min-vw-25 full-width way-forward stayright downlow ec-box-shadow">
+          <Chat client={this.chatClient} theme={'livestream dark'}>
             <Channel channel={this.channel}>
               <Window hideOnThread>
-                <ChannelHeader live />
-                <MessageList noGroupByUser Message={MessageLivestream} />
-                <MessageInput Input={MessageInputLarge} focus />
+                <ChannelHeader live title="All Chat" />
+                <MessageList
+                  messageActions={['edit', 'delete', 'flag']}
+                  Message={MessageLivestream}
+                />
+                <MessageInput Input={MessageInputSmall} focus />
               </Window>
-              <Thread Message={MessageLivestream} fullWidth />
             </Channel>
           </Chat>
         </div>
