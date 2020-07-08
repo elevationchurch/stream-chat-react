@@ -195,7 +195,8 @@ const MessageLivestreamComponent = (props) => {
         <div className="str-chat__message-livestream-right">
           <div className="str-chat__message-livestream-content">
             <div className="str-chat__message-livestream-author">
-              <strong>{message.user?.name || message.user?.id}</strong>
+              <strong>User: {message.user?.name || message.user?.id}</strong>{' '}
+              <span>Role: {message.user?.role}</span>
               {message?.type === 'error' && (
                 <div className="str-chat__message-team-error-header">
                   {t('Only visible to you')}
