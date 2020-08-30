@@ -162,12 +162,8 @@ body {
   max-width: 120px;
 }
 .str-chat.livestream.str-chat .str-chat__message-livestream .str-chat__reaction-selector {
-  background: none !important;
-  border-right: 1px solid #e0e0e0;
   border-radius: 0;
   box-shadow: none !important;
   top: 10px !important;
-  max-width: 60px;
-  overflow-x: scroll;
   right: 60px !important;
 }

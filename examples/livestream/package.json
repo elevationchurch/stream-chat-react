@@ -10,7 +10,7 @@
     "react-dom": "^16.12.0",
     "react-scripts": "2.1.4",
     "stream-chat-react": "0.12.1",
-    "@elevationdigital/stream-chat-react": "1.2.5"
+    "@elevationdigital/stream-chat-react": "1.2.6"
   },
   "scripts": {
     "start": "react-scripts start",

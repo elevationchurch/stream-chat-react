@@ -295,7 +295,7 @@ export const messages = [
       last_active: '0001-01-01T00:00:00Z',
       mutes: [],
       online: false,
-      role: 'user',
+      role: 'admin',
       updated_at: '2019-01-25T21:27:39.606466Z',
     },
     __html: '<p>it’s soo green, amazing</p>\n',
