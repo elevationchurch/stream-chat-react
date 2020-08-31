@@ -11,7 +11,7 @@ import UploadsPreview from './UploadsPreview';
 import EmojiPicker from './EmojiPicker';
 import SendButtonComponent from './SendButton';
 
-const reactionOpen = () => (
+const ReactionOpen = () => (
   <span className="reactions-open">
     <svg width="33px" height="34px" viewBox="0 0 33 34" version="1.1">
       <g
@@ -115,7 +115,7 @@ const MessageInputSmall = (props) => {
                 className="str-chat__small-message-input-emojiselect"
                 onClick={messageInput.openEmojiPicker}
               >
-                {reactionOpen}
+                <ReactionOpen />
               </span>
             </div>
 
