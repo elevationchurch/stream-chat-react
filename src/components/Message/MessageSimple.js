@@ -9,11 +9,14 @@ import { Avatar } from '../Avatar';
 import { Gallery } from '../Gallery';
 import { Modal } from '../Modal';
 import { MessageInput, EditMessageForm } from '../MessageInput';
-import { MessageOptions } from './MessageOptions';
-import { MessageText } from './MessageText';
 import { Tooltip } from '../Tooltip';
 import { LoadingIndicator } from '../Loading';
-import { ReactionsList, ReactionSelector } from '../Reactions';
+import {
+  ReactionsList as DefaultReactionList,
+  ReactionSelector as DefaultReactionSelector,
+} from '../Reactions';
+import MessageOptions from './MessageOptions';
+import MessageText from './MessageText';
 import DefaultMessageDeleted from './MessageDeleted';
 import {
   useActionHandler,
@@ -29,6 +32,8 @@ import {
   messageHasReactions,
   messageHasAttachments,
 } from './utils';
+import { DeliveredCheckIcon } from './icons';
+import MessageTimestamp from './MessageTimestamp';
 
 /**
  * MessageSimple - Render component, should be used together with the Message component
@@ -43,6 +48,7 @@ const MessageSimple = (props) => {
     editing,
     message,
     threadList,
+    formatDate,
     updateMessage: propUpdateMessage,
     handleAction: propHandleAction,
     handleOpenThread: propHandleOpenThread,
@@ -52,41 +58,30 @@ const MessageSimple = (props) => {
     onUserHover: onUserHoverCustomHandler,
     tDateTimeParser: propTDateTimeParser,
   } = props;
-  /**
-   *@type {import('types').ChannelContextValue}
-   */
   const { updateMessage: channelUpdateMessage } = useContext(ChannelContext);
   const updateMessage = propUpdateMessage || channelUpdateMessage;
-  const { tDateTimeParser } = useContext(TranslationContext);
   const { isMyMessage } = useUserRole(message);
   const handleOpenThread = useOpenThreadHandler(message);
   const handleReaction = useReactionHandler(message);
   const handleAction = useActionHandler(message);
   const handleRetry = useRetryHandler();
-  const { onUserClick, onUserHover } = useUserHandler(
-    {
-      onUserClickHandler: onUserClickCustomHandler,
-      onUserHoverHandler: onUserHoverCustomHandler,
-    },
-    message,
-  );
+  const { onUserClick, onUserHover } = useUserHandler(message, {
+    onUserClickHandler: onUserClickCustomHandler,
+    onUserHoverHandler: onUserHoverCustomHandler,
+  });
   const reactionSelectorRef = React.createRef();
   const messageWrapperRef = useRef(null);
   const { onReactionListClick, showDetailedReactions } = useReactionClick(
-    reactionSelectorRef,
     message,
+    reactionSelectorRef,
   );
   const {
     Attachment = DefaultAttachment,
     MessageDeleted = DefaultMessageDeleted,
+    ReactionSelector = DefaultReactionSelector,
+    ReactionsList = DefaultReactionList,
   } = props;
 
-  const dateTimeParser = propTDateTimeParser || tDateTimeParser;
-  const when =
-    dateTimeParser &&
-    message &&
-    dateTimeParser(message.created_at).calendar &&
-    dateTimeParser(message.created_at).calendar();
   const hasReactions = messageHasReactions(message);
   const hasAttachment = messageHasAttachments(message);
 
@@ -243,7 +238,13 @@ const MessageSimple = (props) => {
                   {message.user.name || message.user.id}
                 </span>
               ) : null}
-              <span className="str-chat__message-simple-timestamp">{when}</span>
+              <MessageTimestamp
+                customClass="str-chat__message-simple-timestamp"
+                tDateTimeParser={propTDateTimeParser}
+                formatDate={formatDate}
+                message={message}
+                calendar
+              />
             </div>
           </div>
         </div>
@@ -260,9 +261,6 @@ const MessageSimpleStatus = ({
   lastReceivedId,
 }) => {
   const { t } = useContext(TranslationContext);
-  /**
-   * @type {import('types').ChannelContextValue}
-   */
   const { client } = useContext(ChannelContext);
   const { isMyMessage } = useUserRole(message);
   if (!isMyMessage || message?.type === 'error') {
@@ -324,13 +322,7 @@ const MessageSimpleStatus = ({
         data-testid="message-status-received"
       >
         <Tooltip>{t && t('Delivered')}</Tooltip>
-        <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg">
-          <path
-            d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zm3.72 6.633a.955.955 0 1 0-1.352-1.352L6.986 8.663 5.633 7.31A.956.956 0 1 0 4.28 8.663l2.029 2.028a.956.956 0 0 0 1.353 0l4.058-4.058z"
-            fill="#006CFF"
-            fillRule="evenodd"
-          />
-        </svg>
+        <DeliveredCheckIcon />
       </span>
     );
   }
@@ -339,14 +331,13 @@ const MessageSimpleStatus = ({
 
 MessageSimple.propTypes = {
   /** The [message object](https://getstream.io/chat/docs/#message_format) */
-  // @ts-ignore
-  message: PropTypes.object,
+  message: /** @type {PropTypes.Validator<import('stream-chat').MessageResponse>} */ (PropTypes
+    .object.isRequired),
   /**
    * The attachment UI component.
    * Default: [Attachment](https://github.com/GetStream/stream-chat-react/blob/master/src/components/Attachment.js)
    * */
-  // @ts-ignore
-  Attachment: PropTypes.elementType,
+  Attachment: /** @type {PropTypes.Validator<React.ElementType<import('types').AttachmentUIComponentProps>>} */ (PropTypes.elementType),
   /**
    * @deprecated Its not recommended to use this anymore. All the methods in this HOC are provided explicitly.
    *
@@ -354,12 +345,9 @@ MessageSimple.propTypes = {
    * @see See [Message HOC](https://getstream.github.io/stream-chat-react/#message) for example
    *
    * */
-  // @ts-ignore
-  Message: PropTypes.oneOfType([
-    PropTypes.node,
-    PropTypes.func,
-    PropTypes.object,
-  ]),
+  Message: /** @type {PropTypes.Validator<React.ElementType<import('types').MessageUIComponentProps>>} */ (PropTypes.oneOfType(
+    [PropTypes.node, PropTypes.func, PropTypes.object],
+  )),
   /** render HTML instead of markdown. Posting HTML is only allowed server-side */
   unsafeHTML: PropTypes.bool,
   /** Client object */
@@ -368,8 +356,9 @@ MessageSimple.propTypes = {
   /** If its parent message in thread. */
   initialMessage: PropTypes.bool,
   /** Channel config object */
-  // @ts-ignore
-  channelConfig: PropTypes.object,
+  channelConfig: /** @type {PropTypes.Validator<import('stream-chat').ChannelConfig>} */ (PropTypes.object),
+  /** Override the default formatting of the date. This is a function that has access to the original date object. Returns a string or Node  */
+  formatDate: PropTypes.func,
   /** If component is in thread list */
   threadList: PropTypes.bool,
   /**
@@ -388,8 +377,7 @@ MessageSimple.propTypes = {
    * Returns all allowed actions on message by current user e.g., [edit, delete, flag, mute]
    * Please check [Message](https://github.com/GetStream/stream-chat-react/blob/master/src/components/Message.js) component for default implementation.
    * */
-  // @ts-ignore
-  getMessageActions: PropTypes.func,
+  getMessageActions: PropTypes.func.isRequired,
   /**
    * Function to publish updates on message to channel
    *
@@ -410,6 +398,14 @@ MessageSimple.propTypes = {
    * @deprecated This component now relies on the useReactionHandler custom hook.
    */
   handleReaction: PropTypes.func,
+  /**
+   * A component to display the selector that allows a user to react to a certain message.
+   */
+  ReactionSelector: /** @type {PropTypes.Validator<React.ElementType<import('types').ReactionSelectorProps>>} */ (PropTypes.elementType),
+  /**
+   * A component to display the a message list of reactions.
+   */
+  ReactionsList: /** @type {PropTypes.Validator<React.ElementType<import('types').ReactionsListProps>>} */ (PropTypes.elementType),
   /** If actions such as edit, delete, flag, mute are enabled on message */
   actionsEnabled: PropTypes.bool,
   /** DOMRect object for parent MessageList component */
@@ -425,8 +421,6 @@ MessageSimple.propTypes = {
     toJSON: PropTypes.func.isRequired,
   }),
   /**
-   * Handler for actions. Actions in combination with attachments can be used to build [commands](https://getstream.io/chat/docs/#channel_commands).
-   *
    * @param name {string} Name of action
    * @param value {string} Value of action
    * @param event Dom event that triggered this handler
@@ -472,8 +466,7 @@ MessageSimple.propTypes = {
    * The component that will be rendered if the message has been deleted.
    * All of Message's props are passed into this component.
    */
-  // @ts-ignore
-  MessageDeleted: PropTypes.elementType,
+  MessageDeleted: /** @type {PropTypes.Validator<React.ElementType<import('types').MessageDeletedProps>>} */ (PropTypes.elementType),
 };
 
 export default React.memo(MessageSimple, areMessagePropsEqual);

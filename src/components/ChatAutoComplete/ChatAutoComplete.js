@@ -11,7 +11,7 @@ import { LoadingIndicator } from '../Loading';
 import { EmoticonItem } from '../EmoticonItem';
 import { UserItem } from '../UserItem';
 import { CommandItem } from '../CommandItem';
-import { ChatContext } from '../../context/ChatContext';
+import { ChannelContext } from '../../context/ChannelContext';
 
 /** @param {string} word */
 const emojiReplace = (word) => {
@@ -25,7 +25,7 @@ const emojiReplace = (word) => {
 
 /** @type {React.FC<import("types").ChatAutoCompleteProps>} */
 const ChatAutoComplete = (props) => {
-  const { channel } = useContext(ChatContext);
+  const { channel } = useContext(ChannelContext);
   const members = channel?.state?.members;
   const watchers = channel?.state?.watchers;
 
@@ -46,9 +46,13 @@ const ChatAutoComplete = (props) => {
     return Object.values(uniqueUsers);
   }, [members, watchers]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const queryMembersdebounced = useCallback(
     debounce(
-      /** @type {(query: string, onReady: (data: any[]) => void) => Promise<void>} */
+      /**
+       * @param {string} query
+       * @param {(data: any[]) => void} onReady
+       */
       async (query, onReady) => {
         if (!channel?.queryMembers) return;
         const response = await channel?.queryMembers({
@@ -62,7 +66,7 @@ const ChatAutoComplete = (props) => {
     [channel?.queryMembers],
   );
 
-  const { commands, onSelectItem } = props;
+  const { commands, onSelectItem, triggers } = props;
   /**
    * dataProvider accepts `onReady` function, which will executed once the data is ready.
    * Another approach would have been to simply return the data from dataProvider and let the
@@ -71,119 +75,121 @@ const ChatAutoComplete = (props) => {
    * of api call on trailing end of debounce (lets call it a1) but will return with result of
    * previous call without waiting for a1. So in this case, we want to execute onReady, when trailing
    * end of debounce executes.
-   * @type {() => import("../AutoCompleteTextarea/types").TriggerMap}
+   * @type {() => import("../AutoCompleteTextarea/types").TriggerMap | object}
    */
   const getTriggers = useCallback(
     // eslint-disable-next-line sonarjs/cognitive-complexity
-    () => ({
-      ':': {
-        dataProvider: (q, text, onReady) => {
-          if (q.length === 0 || q.charAt(0).match(/[^a-zA-Z0-9+-]/)) {
-            return [];
-          }
-          const emojis = emojiIndex.search(q) || [];
-          const result = emojis.slice(0, 10);
+    () =>
+      triggers || {
+        ':': {
+          dataProvider: (q, text, onReady) => {
+            if (q.length === 0 || q.charAt(0).match(/[^a-zA-Z0-9+-]/)) {
+              return [];
+            }
+            const emojis = emojiIndex.search(q) || [];
+            const result = emojis.slice(0, 10);
 
-          if (onReady) onReady(result, q);
+            if (onReady) onReady(result, q);
 
-          return result;
+            return result;
+          },
+          component: EmoticonItem,
+          output: (entity) => ({
+            key: entity.id,
+            text: `${entity.native}`,
+            caretPosition: 'next',
+          }),
         },
-        component: EmoticonItem,
-        output: (entity) => ({
-          key: entity.id,
-          text: `${entity.native}`,
-          caretPosition: 'next',
-        }),
-      },
-      '@': {
-        dataProvider: (query, text, onReady) => {
-          // By default, we return maximum 100 members via queryChannels api call.
-          // Thus it is safe to assume, that if number of members in channel.state is < 100,
-          // then all the members are already available on client side and we don't need to
-          // make any api call to queryMembers endpoint.
-          if (!query || Object.values(members || {}).length < 100) {
-            const users = getMembersAndWatchers();
+        '@': {
+          dataProvider: (query, text, onReady) => {
+            // By default, we return maximum 100 members via queryChannels api call.
+            // Thus it is safe to assume, that if number of members in channel.state is < 100,
+            // then all the members are already available on client side and we don't need to
+            // make any api call to queryMembers endpoint.
+            if (!query || Object.values(members || {}).length < 100) {
+              const users = getMembersAndWatchers();
 
-            const matchingUsers = users.filter((user) => {
-              if (!query) return true;
-              if (
-                user.name !== undefined &&
-                user.name.toLowerCase().includes(query.toLowerCase())
-              ) {
-                return true;
-              }
-              return user.id.toLowerCase().includes(query.toLowerCase());
-            });
-            const data = matchingUsers.slice(0, 10);
+              const matchingUsers = users.filter((user) => {
+                if (!query) return true;
+                if (
+                  user.name !== undefined &&
+                  user.name.toLowerCase().includes(query.toLowerCase())
+                ) {
+                  return true;
+                }
+                return user.id.toLowerCase().includes(query.toLowerCase());
+              });
+              const data = matchingUsers.slice(0, 10);
 
-            if (onReady) onReady(data, query);
-
-            return data;
-          }
-          return queryMembersdebounced(
-            query,
-            /** @param {any[]} data */
-            (data) => {
               if (onReady) onReady(data, query);
-            },
-          );
+
+              return data;
+            }
+            return queryMembersdebounced(
+              query,
+              /** @param {any[]} data */
+              (data) => {
+                if (onReady) onReady(data, query);
+              },
+            );
+          },
+          component: UserItem,
+          output: (entity) => ({
+            key: entity.id,
+            text: `@${entity.name || entity.id}`,
+            caretPosition: 'next',
+          }),
+          callback: (item) => onSelectItem && onSelectItem(item),
         },
-        component: UserItem,
-        output: (entity) => ({
-          key: entity.id,
-          text: `@${entity.name || entity.id}`,
-          caretPosition: 'next',
-        }),
-        callback: (item) => onSelectItem && onSelectItem(item),
-      },
-      '/': {
-        dataProvider: (q, text, onReady) => {
-          if (text.indexOf('/') !== 0 || !commands) {
-            return [];
-          }
-          const selectedCommands = commands.filter(
-            (c) => c.name.indexOf(q) !== -1,
-          );
-
-          // sort alphabetically unless the you're matching the first char
-          selectedCommands.sort((a, b) => {
-            let nameA = a.name.toLowerCase();
-            let nameB = b.name.toLowerCase();
-            if (nameA.indexOf(q) === 0) {
-              nameA = `0${nameA}`;
+        '/': {
+          dataProvider: (q, text, onReady) => {
+            if (text.indexOf('/') !== 0 || !commands) {
+              return [];
             }
-            if (nameB.indexOf(q) === 0) {
-              nameB = `0${nameB}`;
-            }
-            if (nameA < nameB) {
-              return -1;
-            }
-            if (nameA > nameB) {
-              return 1;
-            }
+            const selectedCommands = commands.filter(
+              (c) => c.name.indexOf(q) !== -1,
+            );
 
-            return 0;
-          });
+            // sort alphabetically unless the you're matching the first char
+            selectedCommands.sort((a, b) => {
+              let nameA = a.name.toLowerCase();
+              let nameB = b.name.toLowerCase();
+              if (nameA.indexOf(q) === 0) {
+                nameA = `0${nameA}`;
+              }
+              if (nameB.indexOf(q) === 0) {
+                nameB = `0${nameB}`;
+              }
+              if (nameA < nameB) {
+                return -1;
+              }
+              if (nameA > nameB) {
+                return 1;
+              }
 
-          const result = selectedCommands.slice(0, 10);
-          if (onReady) onReady(result, q);
+              return 0;
+            });
 
-          return result;
+            const result = selectedCommands.slice(0, 10);
+            if (onReady) onReady(result, q);
+
+            return result;
+          },
+          component: CommandItem,
+          output: (entity) => ({
+            key: entity.id,
+            text: `/${entity.name}`,
+            caretPosition: 'next',
+          }),
         },
-        component: CommandItem,
-        output: (entity) => ({
-          key: entity.id,
-          text: `/${entity.name}`,
-          caretPosition: 'next',
-        }),
       },
-    }),
     [
       members,
       getMembersAndWatchers,
       commands,
       onSelectItem,
       queryMembersdebounced,
+      triggers,
     ],
   );
 

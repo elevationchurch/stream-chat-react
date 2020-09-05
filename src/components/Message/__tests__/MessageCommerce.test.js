@@ -9,18 +9,16 @@ import {
   generateReaction,
 } from 'mock-builders';
 
-import { ChannelContext, TranslationContext } from '../../../context';
+import { ChannelContext } from '../../../context';
 import MessageCommerce from '../MessageCommerce';
 import { Avatar as AvatarMock } from '../../Avatar';
-import { MessageText as MessageTextMock } from '../MessageText';
+import MessageTextMock from '../MessageText';
 
 jest.mock('../../Avatar', () => ({
   Avatar: jest.fn(() => <div />),
 }));
 
-jest.mock('../MessageText', () => ({
-  MessageText: jest.fn(() => <div />),
-}));
+jest.mock('../MessageText', () => jest.fn(() => <div />));
 
 const alice = generateUser({ name: 'alice', image: 'alice-avatar.jpg' });
 const bob = generateUser({ name: 'bob', image: 'bob-avatar.jpg' });
@@ -37,9 +35,11 @@ async function renderMessageCommerce(
     <ChannelContext.Provider
       value={{ channel, client, openThread: openThreadMock }}
     >
-      <TranslationContext.Provider value={{ t: (key) => key }}>
-        <MessageCommerce message={message} {...props} />
-      </TranslationContext.Provider>
+      <MessageCommerce
+        message={message}
+        getMessageActions={() => ['flag', 'mute']}
+        {...props}
+      />
     </ChannelContext.Provider>,
   );
 }
@@ -100,6 +100,62 @@ describe('<MessageCommerce />', () => {
       MessageDeleted: CustomMessageDeletedComponent,
     });
     expect(getByTestId('custom-message-deleted')).toBeInTheDocument();
+  });
+
+  it('should render reaction selector with custom component when one is given', async () => {
+    const message = generateBobMessage({ text: undefined });
+    const customSelectorTestId = 'custom-reaction-selector';
+    // Passing the ref prevents a react warning
+    // eslint-disable-next-line no-unused-vars
+    const CustomReactionSelector = (props, ref) => (
+      <ul data-testid={customSelectorTestId}>
+        <li>
+          <button onClick={(e) => props.handleReaction('smile-emoticon', e)}>
+            :)
+          </button>
+        </li>
+        <li>
+          <button onClick={(e) => props.handleReaction('sad-emoticon', e)}>
+            :(
+          </button>
+        </li>
+      </ul>
+    );
+    const { getByTestId } = await renderMessageCommerce(
+      message,
+      {
+        ReactionSelector: React.forwardRef(CustomReactionSelector),
+      },
+      { reactions: true },
+    );
+    fireEvent.click(getByTestId('message-reaction-action'));
+    expect(getByTestId(customSelectorTestId)).toBeInTheDocument();
+  });
+
+  it('should render reaction list with custom component when one is given', async () => {
+    const bobReaction = generateReaction({ user: bob, type: 'cool-reaction' });
+    const message = generateAliceMessage({
+      text: undefined,
+      latest_reactions: [bobReaction],
+    });
+    const CustomReactionsList = ({ reactions }) => (
+      <ul data-testid="custom-reaction-list">
+        {reactions.map((reaction) => {
+          if (reaction.type === 'cool-reaction') {
+            return <li key={reaction.type + reaction.user_id}>:)</li>;
+          }
+          return <li key={reaction.type + reaction.user_id}>?</li>;
+        })}
+      </ul>
+    );
+    const { getByTestId } = await renderMessageCommerce(
+      message,
+      {
+        ReactionsList: CustomReactionsList,
+      },
+      { reactions: true },
+    );
+    expect(getByTestId('custom-reaction-list')).toBeInTheDocument();
   });
 
   it('should position message to the right if it is from current user', async () => {

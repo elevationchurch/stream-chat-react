@@ -1,6 +1,4 @@
 /* eslint-disable */
-// @noflow
-/* eslint-env commonjs */
 const path = require('path');
 
 module.exports = {
@@ -9,7 +7,7 @@ module.exports = {
   assetsDir: 'src/assets',
   sortProps: (props) => props,
   resolver: require('react-docgen').resolver.findAllComponentDefinitions,
-  webpackConfig: require('./webpack.config.styleguidist.js'),
+  webpackConfig: require('./styleguidist/webpack.config.styleguidist.js'),
   serverPort: 6068,
   styleguideComponents: {
     PathlineRenderer: path.join(__dirname, 'styleguidist/PathlineRenderer'),
@@ -37,19 +35,70 @@ module.exports = {
       usageMode: 'expand',
     },
     {
-      name: 'Message Components',
-      components: [
-        'src/components/Message/Message.js',
-        'src/components/Message/MessageSimple.js',
-        'src/components/Message/MessageTeam.js',
-        'src/components/Message/MessageLivestream.js',
-        'src/components/Attachment/Attachment.js',
-        'src/components/Attachment/AttachmentActions.js',
-        'src/components/Reactions/ReactionSelector.js',
-        'src/components/MessageActions/MessageActionsBox.js',
-      ],
-      exampleMode: 'collapse',
+      name: 'Message',
       usageMode: 'expand',
+      sections: [
+        {
+          name: 'Components',
+          components: [
+            'src/components/Message/Message.js',
+            'src/components/Message/MessageSimple.js',
+            'src/components/Message/MessageTeam.js',
+            'src/components/Message/MessageLivestream.js',
+            'src/components/Attachment/Attachment.js',
+            'src/components/Attachment/AttachmentActions.js',
+            'src/components/Reactions/ReactionSelector.js',
+            'src/components/MessageActions/MessageActionsBox.js',
+          ],
+          exampleMode: 'collapse',
+        },
+        {
+          name: 'Custom Hooks',
+          content: 'src/docs/MessageCustomHooks.md',
+          sections: [
+            {
+              name: 'useDeleteHandler',
+              content: 'src/docs/useDeleteHandler.md',
+            },
+            {
+              name: 'useEditHandler',
+              content: 'src/docs/useEditHandler.md',
+            },
+            {
+              name: 'useFlagHandler',
+              content: 'src/docs/useFlagHandler.md',
+            },
+            {
+              name: 'useMentionsHandler',
+              content: 'src/docs/useMentionsHandler.md',
+            },
+            {
+              name: 'useMuteHandler',
+              content: 'src/docs/useMuteHandler.md',
+            },
+            {
+              name: 'useOpenThreadHandler',
+              content: 'src/docs/useOpenThreadHandler.md',
+            },
+            {
+              name: 'useReactionHandler',
+              content: 'src/docs/useReactionHandler.md',
+            },
+            {
+              name: 'useRetryHandler',
+              content: 'src/docs/useRetryHandler.md',
+            },
+            {
+              name: 'useUserHandler',
+              content: 'src/docs/useUserHandler.md',
+            },
+            {
+              name: 'useUserRole',
+              content: 'src/docs/useUserRole.md',
+            },
+          ],
+        },
+      ],
     },
     {
       name: 'Message Input',
@@ -116,7 +165,7 @@ module.exports = {
   ],
   require: [
     path.join(path.resolve(path.dirname('')), 'dist/css/index.css'),
-    path.join(path.resolve(path.dirname('')), 'styleguidist.css'),
+    path.join(path.resolve(path.dirname('')), 'styleguidist/styleguidist.css'),
   ],
   template: {
     favicon: 'https://getstream.imgix.net/images/favicons/favicon-96x96.png',

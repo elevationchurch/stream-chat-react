@@ -3,6 +3,7 @@ import React, {
   useCallback,
   useEffect,
   useContext,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -17,7 +18,10 @@ import { Avatar } from '../Avatar';
 import { Attachment as DefaultAttachment } from '../Attachment';
 import { Gallery } from '../Gallery';
 import { MessageInput, EditMessageForm } from '../MessageInput';
-import { SimpleReactionsList, ReactionSelector } from '../Reactions';
+import {
+  SimpleReactionsList as DefaultReactionsList,
+  ReactionSelector as DefaultReactionSelector,
+} from '../Reactions';
 import {
   useReactionHandler,
   useUserHandler,
@@ -25,7 +29,8 @@ import {
   useOpenThreadHandler,
   useActionHandler,
   useReactionClick,
-  useMentionsHandler,
+  useMentionsUIHandler,
+  useEditHandler,
 } from './hooks';
 import {
   messageHasAttachments,
@@ -34,33 +39,9 @@ import {
   areMessagePropsEqual,
 } from './utils';
 import { MessageActions } from '../MessageActions';
+import { ReactionIcon, ThreadIcon, ErrorIcon, Verified } from './icons';
+import MessageTimestamp from './MessageTimestamp';
 
-const ReactionAltSvg = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-    <path d="M462.3 62.7c-54.5-46.4-136-38.7-186.6 13.5L256 96.6l-19.7-20.3C195.5 34.1 113.2 8.7 49.7 62.7c-62.8 53.6-66.1 149.8-9.9 207.8l193.5 199.8c6.2 6.4 14.4 9.7 22.6 9.7 8.2 0 16.4-3.2 22.6-9.7L472 270.5c56.4-58 53.1-154.2-9.7-207.8zm-13.1 185.6L256.4 448.1 62.8 248.3c-38.4-39.6-46.4-115.1 7.7-161.2 54.8-46.8 119.2-12.9 142.8 11.5l42.7 44.1 42.7-44.1c23.2-24 88.2-58 142.8-11.5 54 46 46.1 121.5 7.7 161.2z" />
-  </svg>
-);
-
-const threadSvg =
-  '<svg width="14" height="10" xmlns="http://www.w3.org/2000/svg"><path d="M8.516 3c4.78 0 4.972 6.5 4.972 6.5-1.6-2.906-2.847-3.184-4.972-3.184v2.872L3.772 4.994 8.516.5V3zM.484 5l4.5-4.237v1.78L2.416 5l2.568 2.125v1.828L.484 5z" fillRule="evenodd" /></svg>';
-
-const Verified = () => (
-  <span className="verified-badge">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-      <path d="M512 256c0-37.7-23.7-69.9-57.1-82.4 14.7-32.4 8.8-71.9-17.9-98.6-26.7-26.7-66.2-32.6-98.6-17.9C325.9 23.7 293.7 0 256 0s-69.9 23.7-82.4 57.1c-32.4-14.7-72-8.8-98.6 17.9-26.7 26.7-32.6 66.2-17.9 98.6C23.7 186.1 0 218.3 0 256s23.7 69.9 57.1 82.4c-14.7 32.4-8.8 72 17.9 98.6 26.6 26.6 66.1 32.7 98.6 17.9 12.5 33.3 44.7 57.1 82.4 57.1s69.9-23.7 82.4-57.1c32.6 14.8 72 8.7 98.6-17.9 26.7-26.7 32.6-66.2 17.9-98.6 33.4-12.5 57.1-44.7 57.1-82.4zm-144.8-44.25L236.16 341.74c-4.31 4.28-11.28 4.25-15.55-.06l-75.72-76.33c-4.28-4.31-4.25-11.28.06-15.56l26.03-25.82c4.31-4.28 11.28-4.25 15.56.06l42.15 42.49 97.2-96.42c4.31-4.28 11.28-4.25 15.55.06l25.82 26.03c4.28 4.32 4.26 11.29-.06 15.56z" />
-    </svg>
-  </span>
-);
-
-const ErrorIcon = () => (
-  <svg width="14" height="14" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M7 0a7 7 0 1 0 0 14A7 7 0 0 0 7 0zm.875 10.938a.438.438 0 0 1-.438.437h-.875a.438.438 0 0 1-.437-.438v-.874c0-.242.196-.438.438-.438h.875c.241 0 .437.196.437.438v.874zm0-2.626a.438.438 0 0 1-.438.438h-.875a.438.438 0 0 1-.437-.438v-5.25c0-.241.196-.437.438-.437h.875c.241 0 .437.196.437.438v5.25z"
-      fill="#EA152F"
-      fillRule="evenodd"
-    />
-  </svg>
-);
 /**
  * MessageLivestream - Render component, should be used together with the Message component
  * Implements the look and feel for a livestream use case.
@@ -74,10 +55,15 @@ const MessageLivestreamComponent = (props) => {
   const {
     message,
     groupStyles,
-    editing,
-    clearEditingState,
+    editing: propEditing,
+    setEditingState: propSetEdit,
+    clearEditingState: propClearEdit,
     initialMessage,
     unsafeHTML,
+    formatDate,
+    channelConfig: propChannelConfig,
+    ReactionsList = DefaultReactionsList,
+    ReactionSelector = DefaultReactionSelector,
     onUserClick: propOnUserClick,
     handleReaction: propHandleReaction,
     handleOpenThread: propHandleOpenThread,
@@ -99,24 +85,39 @@ const MessageLivestreamComponent = (props) => {
   /**
    *@type {import('types').ChannelContextValue}
    */
-  const { updateMessage: channelUpdateMessage } = useContext(ChannelContext);
-  const { onMentionsClick, onMentionsHover } = useMentionsHandler(message);
+  const { updateMessage: channelUpdateMessage, channel } = useContext(
+    ChannelContext,
+  );
+  const channelConfig = propChannelConfig || channel?.getConfig();
+  const { onMentionsClick, onMentionsHover } = useMentionsUIHandler(message, {
+    onMentionsClick: propOnMentionsClick,
+    onMentionsHover: propOnMentionsHover,
+  });
   const handleAction = useActionHandler(message);
   const handleReaction = useReactionHandler(message);
   const handleOpenThread = useOpenThreadHandler(message);
+  const {
+    editing: ownEditing,
+    setEdit: ownSetEditing,
+    clearEdit: ownClearEditing,
+  } = useEditHandler();
+  const editing = propEditing || ownEditing;
+  const setEdit = propSetEdit || ownSetEditing;
+  const clearEdit = propClearEdit || ownClearEditing;
   const handleRetry = useRetryHandler();
   const retryHandler = propHandleRetry || handleRetry;
   const { onReactionListClick, showDetailedReactions } = useReactionClick(
-    reactionSelectorRef,
     message,
+    reactionSelectorRef,
     messageWrapperRef,
   );
-  const { onUserClick, onUserHover } = useUserHandler(
-    {
-      onUserClickHandler: propOnUserClick,
-      onUserHoverHandler: propOnUserHover,
-    },
-    message,
+  const { onUserClick, onUserHover } = useUserHandler(message, {
+    onUserClickHandler: propOnUserClick,
+    onUserHoverHandler: propOnUserHover,
+  });
+  const messageText = useMemo(
+    () => renderText(message?.text, message?.mentioned_users),
+    [message?.text, message?.mentioned_users],
   );
 
   const hasAttachment = messageHasAttachments(message);
@@ -155,7 +156,7 @@ const MessageLivestreamComponent = (props) => {
         <MessageInput
           Input={EditMessageForm}
           message={message}
-          clearEditingState={clearEditingState}
+          clearEditingState={clearEdit}
           updateMessage={propUpdateMessage || channelUpdateMessage}
         />
       </div>
@@ -186,14 +187,15 @@ const MessageLivestreamComponent = (props) => {
         <MessageLivestreamActions
           initialMessage={initialMessage}
           message={message}
+          formatDate={formatDate}
           onReactionListClick={onReactionListClick}
           messageWrapperRef={messageWrapperRef}
           getMessageActions={props.getMessageActions}
           tDateTimeParser={propTDateTimeParser}
-          channelConfig={props.channelConfig}
+          channelConfig={channelConfig}
           threadList={props.threadList}
-          handleOpenThread={props.handleOpenThread || handleOpenThread}
-          setEditingState={props.setEditingState}
+          handleOpenThread={propHandleOpenThread || handleOpenThread}
+          setEditingState={setEdit}
         />
         <div className="str-chat__message-livestream-left">
           <Avatar
@@ -223,13 +225,13 @@ const MessageLivestreamComponent = (props) => {
                   ? 'str-chat__message-livestream-text--is-emoji'
                   : ''
               }
-              onMouseOver={propOnMentionsHover || onMentionsHover}
-              onClick={propOnMentionsClick || onMentionsClick}
+              onMouseOver={onMentionsHover}
+              onClick={onMentionsClick}
             >
               {message.type !== 'error' &&
                 message.status !== 'failed' &&
                 !unsafeHTML &&
-                renderText(message)}
+                messageText}
 
               {message.type !== 'error' &&
                 message.status !== 'failed' &&
@@ -283,7 +285,7 @@ const MessageLivestreamComponent = (props) => {
 
             {galleryImages.length !== 0 && <Gallery images={galleryImages} />}
 
-            <SimpleReactionsList
+            <ReactionsList
               reaction_counts={message.reaction_counts}
               reactions={message.latest_reactions}
               handleReaction={propHandleReaction || handleReaction}
@@ -311,14 +313,13 @@ const MessageLivestreamActions = (props) => {
     message,
     channelConfig,
     threadList,
+    formatDate,
     messageWrapperRef,
     onReactionListClick,
     getMessageActions,
     handleOpenThread,
     tDateTimeParser: propTDateTimeParser,
   } = props;
-  const { tDateTimeParser } = useContext(TranslationContext);
-  const dateParser = propTDateTimeParser || tDateTimeParser;
   const [actionsBoxOpen, setActionsBoxOpen] = useState(false);
   /** @type {() => void} Typescript syntax */
   const hideOptions = useCallback(() => setActionsBoxOpen(false), []);
@@ -369,26 +370,30 @@ const MessageLivestreamActions = (props) => {
       data-testid={'message-livestream-actions'}
       className={`str-chat__message-livestream-actions`}
     >
-      <span className={`str-chat__message-livestream-time`}>
-        {dateParser && dateParser(message.created_at).format('h:mmA')}
-      </span>
+      <MessageTimestamp
+        customClass="str-chat__message-livestream-time"
+        message={message}
+        formatDate={formatDate}
+        tDateTimeParser={propTDateTimeParser}
+      />
       {channelConfig && channelConfig.reactions && (
         <span
           onClick={onReactionListClick}
           data-testid="message-livestream-reactions-action"
           className="chat-reaction-button"
         >
-          <ReactionAltSvg />
+          <span>
+            <ReactionIcon />
+          </span>
         </span>
       )}
       {!threadList && channelConfig && channelConfig.replies && (
         <span
           data-testid="message-livestream-thread-action"
-          dangerouslySetInnerHTML={{
-            __html: threadSvg,
-          }}
           onClick={handleOpenThread}
-        />
+        >
+          <ThreadIcon />
+        </span>
       )}
       <MessageActions
         {...props}
@@ -402,14 +407,13 @@ const MessageLivestreamActions = (props) => {
 
 MessageLivestreamComponent.propTypes = {
   /** The [message object](https://getstream.io/chat/docs/#message_format) */
-  // @ts-ignore
-  message: PropTypes.object,
+  message: /** @type {PropTypes.Validator<import('stream-chat').MessageResponse>} */ (PropTypes
+    .object.isRequired),
   /**
    * The attachment UI component.
    * Default: [Attachment](https://github.com/GetStream/stream-chat-react/blob/master/src/components/Attachment.js)
    * */
-  // @ts-ignore
-  Attachment: PropTypes.elementType,
+  Attachment: /** @type {PropTypes.Validator<React.ElementType<import('types').AttachmentUIComponentProps>>} */ (PropTypes.elementType),
   /**
    *
    * @deprecated Its not recommended to use this anymore. All the methods in this HOC are provided explicitly.
@@ -418,19 +422,19 @@ MessageLivestreamComponent.propTypes = {
    * @see See [Message HOC](https://getstream.github.io/stream-chat-react/#message) for example
    *
    * */
-  // @ts-ignore
-  Message: PropTypes.oneOfType([
-    PropTypes.node,
-    PropTypes.func,
-    PropTypes.object,
-  ]).isRequired,
+  Message: /** @type {PropTypes.Validator<React.ElementType<import('types').MessageUIComponentProps>>} */ (PropTypes.oneOfType(
+    [PropTypes.node, PropTypes.func, PropTypes.object],
+  )),
   /** render HTML instead of markdown. Posting HTML is only allowed server-side */
   unsafeHTML: PropTypes.bool,
   /** If its parent message in thread. */
   initialMessage: PropTypes.bool,
+
+  /** Override the default formatting of the date. This is a function that has access to the original date object. Returns a string or Node  */
+  formatDate: PropTypes.func,
+
   /** Channel config object */
-  // @ts-ignore
-  channelConfig: PropTypes.object,
+  channelConfig: /** @type {PropTypes.Validator<import('stream-chat').ChannelConfig>} */ (PropTypes.object),
   /** If component is in thread list */
   threadList: PropTypes.bool,
   /** Function to open thread on current messxage */
@@ -445,8 +449,7 @@ MessageLivestreamComponent.propTypes = {
    * Returns all allowed actions on message by current user e.g., [edit, delete, flag, mute]
    * Please check [Message](https://github.com/GetStream/stream-chat-react/blob/master/src/components/Message.js) component for default implementation.
    * */
-  // @ts-ignore
-  getMessageActions: PropTypes.func,
+  getMessageActions: PropTypes.func.isRequired,
   /**
    * Function to publish updates on message to channel
    *
@@ -465,15 +468,31 @@ MessageLivestreamComponent.propTypes = {
    * @param event Dom event which triggered this function
    */
   handleReaction: PropTypes.func,
+  /**
+   * A component to display the selector that allows a user to react to a certain message.
+   */
+  ReactionSelector: /** @type {PropTypes.Validator<React.ElementType<import('types').ReactionSelectorProps>>} */ (PropTypes.elementType),
+  /**
+   * A component to display the a message list of reactions.
+   */
+  ReactionsList: /** @type {PropTypes.Validator<React.ElementType<import('types').ReactionsListProps>>} */ (PropTypes.elementType),
+
   /** If actions such as edit, delete, flag, mute are enabled on message */
   /** @deprecated This property is no longer used * */
   actionsEnabled: PropTypes.bool,
   /** DOMRect object for parent MessageList component */
-  // @ts-ignore
-  messageListRect: PropTypes.object,
+  messageListRect: PropTypes.shape({
+    x: PropTypes.number.isRequired,
+    y: PropTypes.number.isRequired,
+    height: PropTypes.number.isRequired,
+    width: PropTypes.number.isRequired,
+    top: PropTypes.number.isRequired,
+    right: PropTypes.number.isRequired,
+    bottom: PropTypes.number.isRequired,
+    left: PropTypes.number.isRequired,
+    toJSON: PropTypes.func.isRequired,
+  }),
   /**
-   * Handler for actions. Actions in combination with attachments can be used to build [commands](https://getstream.io/chat/docs/#channel_commands).
-   *
    * @param name {string} Name of action
    * @param value {string} Value of action
    * @param event Dom event that triggered this handler
@@ -509,8 +528,7 @@ MessageLivestreamComponent.propTypes = {
    * The component that will be rendered if the message has been deleted.
    * All of Message's props are passed into this component.
    */
-  // @ts-ignore
-  MessageDeleted: PropTypes.elementType,
+  MessageDeleted: /** @type {PropTypes.Validator<React.ElementType<import('types').MessageDeletedProps>>} */ (PropTypes.elementType),
 };
 
 export default React.memo(MessageLivestreamComponent, areMessagePropsEqual);

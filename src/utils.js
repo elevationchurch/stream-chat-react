@@ -1,7 +1,6 @@
 /* eslint-disable */
 import emojiRegex from 'emoji-regex';
 import ReactMarkdown from 'react-markdown/with-html';
-import truncate from 'lodash/truncate';
 import data from 'emoji-mart/data/all.json';
 import React from 'react';
 import { find as linkifyFind } from 'linkifyjs/lib/linkify';
@@ -160,13 +159,19 @@ const matchMarkdownLinks = (message) => {
   return links;
 };
 
-export const renderText = (message) => {
+export const truncate = (input, length, end = '...') => {
+  if (input.length > length) {
+    return `${input.substring(0, length - end.length)}${end}`;
+  }
+  return input;
+};
+
+export const renderText = (text, mentioned_users) => {
   // take the @ mentions and turn them into markdown?
   // translate links
-  const { text, mentioned_users } = message;
   if (!text) return null;
 
-  let newText = message.text;
+  let newText = text;
   let markdownLinks = matchMarkdownLinks(newText);
   // extract all valid links/emails within text and replace it with proper markup
   linkifyFind(newText).forEach(({ type, href, value }) => {
@@ -179,9 +184,7 @@ export const renderText = (message) => {
     const displayLink =
       type === 'email'
         ? value
-        : truncate(value.replace(/(http(s?):\/\/)?(www\.)?/, ''), {
-            length: 20,
-          });
+        : truncate(value.replace(/(http(s?):\/\/)?(www\.)?/, ''), 20);
     newText = newText.replace(value, `[${displayLink}](${encodeURI(href)})`);
   });
 
@@ -207,7 +210,7 @@ export const renderText = (message) => {
         if (uri.startsWith('app://')) {
           return uri;
         } else {
-          return require('react-markdown').uriTransformer(uri);
+          return ReactMarkdown.uriTransformer(uri);
         }
       }}
     />

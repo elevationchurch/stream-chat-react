@@ -50,7 +50,7 @@ describe('Chat', () => {
     await waitFor(() => {
       expect(context).toBeInstanceOf(Object);
       expect(context.client).toBe(chatClient);
-      expect(context.channel).toStrictEqual({});
+      expect(context.channel).toBeUndefined();
       expect(context.mutes).toStrictEqual([]);
       expect(context.navOpen).toBe(true);
       expect(context.theme).toBe('messaging light');
@@ -170,28 +170,40 @@ describe('Chat', () => {
       );
 
       await waitFor(() => expect(context.navOpen).toBe(true));
-      await act(() => context.setActiveChannel({}));
+      await act(() => context.setActiveChannel());
       await waitFor(() => expect(context.navOpen).toBe(false));
     });
   });
 
   describe('mutes', () => {
     it('init the mute state with client data', async () => {
-      const mutes = ['user_y', 'user_z'];
       const chatClientWithUser = await getTestClientWithUser({ id: 'user_x' });
-      chatClientWithUser.user.mutes = mutes;
-
+      // First load, mutes are initialized empty
+      chatClientWithUser.user.mutes = [];
       let context;
-      render(
+      const { rerender } = render(
         <Chat client={chatClientWithUser}>
           <ChatContextConsumer
             fn={(ctx) => {
               context = ctx;
             }}
-          ></ChatContextConsumer>
+          />
         </Chat>,
       );
-
+      // Chat client loads mutes information
+      const mutes = ['user_y', 'user_z'];
+      chatClientWithUser.user.mutes = mutes;
+      act(() => {
+        rerender(
+          <Chat client={chatClientWithUser}>
+            <ChatContextConsumer
+              fn={(ctx) => {
+                context = ctx;
+              }}
+            ></ChatContextConsumer>
+          </Chat>,
+        );
+      });
       await waitFor(() => expect(context.mutes).toStrictEqual(mutes));
     });
 
@@ -234,7 +246,7 @@ describe('Chat', () => {
 
       const channel = { cid: 'cid', query: jest.fn() };
       const watchers = { user_y: {} };
-      await waitFor(() => expect(context.channel).toStrictEqual({}));
+      await waitFor(() => expect(context.channel).toBeUndefined());
       await act(() => context.setActiveChannel(channel, watchers));
       await waitFor(() => {
         expect(context.channel).toStrictEqual(channel);
@@ -258,7 +270,7 @@ describe('Chat', () => {
       await waitFor(() => expect(context.setActiveChannel).not.toBeUndefined());
 
       const e = { preventDefault: jest.fn() };
-      await act(() => context.setActiveChannel({}, {}, e));
+      await act(() => context.setActiveChannel(undefined, {}, e));
       await waitFor(() => expect(e.preventDefault).toHaveBeenCalledTimes(1));
     });
   });

@@ -19,12 +19,7 @@ import SendButtonComponent from './SendButton';
 /** @type {React.FC<import("types").MessageInputProps>} */
 const MessageInputLarge = (props) => {
   const messageInput = useMessageInput(props);
-  /** @type {import("types").TranslationContextValue} */
-  const translationContext = useContext(TranslationContext);
-  const {
-    t = /** @type {(key: string) => string} */ (key) => key,
-  } = translationContext;
-  /** @type {import("types").ChannelContextValue} */
+  const { t } = useContext(TranslationContext);
   const channelContext = useContext(ChannelContext);
 
   /**
@@ -68,9 +63,9 @@ const MessageInputLarge = (props) => {
         handleFiles={messageInput.uploadNewFiles}
       >
         <div className="str-chat__input">
-          <UploadsPreview {...messageInput} />
           <EmojiPicker {...messageInput} />
           <div className="str-chat__input--textarea-wrapper">
+            <UploadsPreview {...messageInput} />
             <ChatAutoComplete
               commands={messageInput.getCommands()}
               innerRef={messageInput.textareaRef}
@@ -82,6 +77,7 @@ const MessageInputLarge = (props) => {
               maxRows={props.maxRows}
               placeholder={t('Type your message')}
               onPaste={messageInput.onPaste}
+              triggers={props.autocompleteTriggers}
               grow={props.grow}
               disabled={props.disabled}
               additionalTextareaProps={props.additionalTextareaProps}
@@ -167,10 +163,16 @@ MessageInputLarge.propTypes = {
   maxRows: PropTypes.number.isRequired,
   /** Make the textarea disabled */
   disabled: PropTypes.bool,
+  /** enable/disable firing the typing event */
+  publishTypingEvent: PropTypes.bool,
   /**
    * Any additional attrubutes that you may want to add for underlying HTML textarea element.
    */
   additionalTextareaProps: PropTypes.object,
+  /**
+   * Override the default triggers of the ChatAutoComplete component
+   */
+  autocompleteTriggers: PropTypes.object,
   /**
    * @param message: the Message object to be sent
    * @param cid: the channel id
@@ -192,6 +194,7 @@ MessageInputLarge.propTypes = {
 MessageInputLarge.defaultProps = {
   focus: false,
   disabled: false,
+  publishTypingEvent: true,
   grow: true,
   maxRows: 10,
   Input: MessageInputLarge,

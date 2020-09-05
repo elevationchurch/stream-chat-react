@@ -3,24 +3,22 @@
 /** Components */
 import * as React from 'react';
 import * as Client from 'stream-chat';
-import SeamlessImmutable, {
-  ImmutableArray,
-  ImmutableObject,
-} from 'seamless-immutable';
+import SeamlessImmutable from 'seamless-immutable';
 import { MessageResponse } from 'stream-chat';
 import ReactMarkdown from 'react-markdown';
 import * as i18next from 'i18next';
 import * as Dayjs from 'dayjs';
+import { ReactPlayerProps } from 'react-player';
 
 export interface ChatContextValue {
   client: Client.StreamChat;
   channel?: Client.Channel;
   setActiveChannel?(
-    channel: Client.Channel,
-    watchers?: SeamlessImmutable.Immutable<{ [user_id: string]: Client.User }>,
+    channel?: Client.Channel,
+    watchers?: { limit?: number; offset?: number },
     event?: React.SyntheticEvent,
   ): void;
-  openNav?: boolean;
+  navOpen?: boolean;
   openMobileNav?(): void;
   closeMobileNav?(): void;
   theme?: string;
@@ -30,10 +28,12 @@ export interface ChatContextValue {
 export interface ChannelContextValue extends ChatContextValue {
   Message?: React.ElementType<MessageUIComponentProps>;
   Attachment?: React.ElementType<AttachmentUIComponentProps>;
-  messages?: Client.MessageResponse[];
+  messages?: SeamlessImmutable.ImmutableArray<Client.MessageResponse>;
   online?: boolean;
   typing?: SeamlessImmutable.Immutable<{
-    [user_id: string]: Client.Event<Client.TypingStartEvent>;
+    [user_id: string]: SeamlessImmutable.Immutable<
+      Client.Event<Client.TypingStartEvent>
+    >;
   }>;
   watcher_count?: number;
   watchers?: SeamlessImmutable.Immutable<{ [user_id: string]: Client.User }>;
@@ -44,7 +44,7 @@ export interface ChannelContextValue extends ChatContextValue {
       user: Client.UserResponse;
     }>;
   };
-  error?: boolean | Error;
+  error?: Error | null;
   // Loading the intial content of the channel
   loading?: boolean;
   // Loading more messages
@@ -52,20 +52,16 @@ export interface ChannelContextValue extends ChatContextValue {
   hasMore?: boolean;
   threadLoadingMore?: boolean;
   threadHasMore?: boolean;
-  eventHistory?: {
-    [lastMessageId: string]: (
-      | Client.MemberAddedEvent
-      | Client.MemberRemovedEvent
-    )[];
-  };
-  thread?: Client.MessageResponse | null;
-  threadMessages?: Client.MessageResponse[];
+  thread?: SeamlessImmutable.Immutable<Client.MessageResponse> | null;
+  threadMessages?: SeamlessImmutable.ImmutableArray<Client.MessageResponse>;
 
   multipleUploads?: boolean;
   acceptedFiles?: string[];
   maxNumberOfFiles?: number;
   sendMessage?(message: Client.Message): Promise<any>;
-  editMessage?(updatedMessage: Client.Message): Promise<any>;
+  editMessage?(
+    updatedMessage: Client.Message,
+  ): Promise<Client.UpdateMessageAPIResponse | void>;
   /** Via Context: The function to update a message, handled by the Channel component */
   updateMessage?(
     updatedMessage: Client.MessageResponse,
@@ -85,7 +81,7 @@ export interface ChannelContextValue extends ChatContextValue {
 
   loadMore?(): void;
   // thread related
-  closeThread(event: React.SyntheticEvent): void;
+  closeThread?(event: React.SyntheticEvent): void;
   loadMoreThread?(): void;
 
   /** Via Context: The function is called when the list scrolls */
@@ -110,88 +106,158 @@ export interface ChatProps {
   initialNavOpen?: boolean;
 }
 
-export interface ChannelProps
-  extends ChatContextValue,
-    TranslationContextValue {
+export interface ChannelProps {
+  channel?: Client.Channel;
+
   /** The loading indicator to use */
   LoadingIndicator?: React.ElementType<LoadingIndicatorProps>;
   LoadingErrorIndicator?: React.ElementType<LoadingErrorIndicatorProps>;
   Message?: React.ElementType<MessageUIComponentProps>;
   Attachment?: React.ElementType<AttachmentUIComponentProps>;
+  EmptyPlaceholder?: React.ReactElement;
   mutes?: Client.Mute[];
   multipleUploads?: boolean;
   acceptedFiles?: string[];
   maxNumberOfFiles?: number;
 
   /** Function to be called when a @mention is clicked. Function has access to the DOM event and the target user object */
-  onMentionsClick?(e: React.MouseEvent, user: Client.UserResponse): void;
+  onMentionsClick?(e: React.MouseEvent, user?: Client.UserResponse): void;
   /** Function to be called when hovering over a @mention. Function has access to the DOM event and the target user object */
-  onMentionsHover?(e: React.MouseEvent, user: Client.UserResponse): void;
+  onMentionsHover?(e: React.MouseEvent, user?: Client.UserResponse): void;
 
   /** Override send message request (Advanced usage only) */
   doSendMessageRequest?(
     channelId: string,
     message: Client.Message,
   ): Promise<Client.MessageResponse> | void;
+  doMarkReadRequest?(
+    channel: Client.Channel,
+  ): Promise<Client.MessageResponse> | void;
   /** Override update(edit) message request (Advanced usage only) */
   doUpdateMessageRequest?(
     channelId: string,
     updatedMessage: Client.Message,
-  ): Promise<Client.MessageResponse> | void;
+  ): Promise<Client.UpdateMessageAPIResponse>;
 }
 
-export interface ChannelListProps extends ChatContextValue {
+export type ArrayTwoOrMore<T> = {
+  0: T;
+  1: T;
+} & Array<T>;
+
+export type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Pick<
+  T,
+  Exclude<keyof T, Keys>
+> &
+  {
+    [K in Keys]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<Keys, K>>>;
+  }[Keys];
+
+export type PrimitiveFilter = string | number | boolean;
+
+export interface ChannelFilter {
+  $and?: ArrayTwoOrMore<RequireAtLeastOne<ChannelFilter>>;
+  $eq?: PrimitiveFilter;
+  $gt?: PrimitiveFilter;
+  $gte?: PrimitiveFilter;
+  $in?: PrimitiveFilter[];
+  $lt?: PrimitiveFilter;
+  $lte?: PrimitiveFilter;
+  $ne?: PrimitiveFilter;
+  $nin?: PrimitiveFilter[];
+  $nor?: ArrayTwoOrMore<RequireAtLeastOne<ChannelFilter>>;
+  $or?: ArrayTwoOrMore<RequireAtLeastOne<ChannelFilter>>;
+}
+
+export interface ChannelFilters {
+  [key: string]: PrimitiveFilter | RequireAtLeastOne<ChannelFilter>;
+}
+
+export type AscDesc = 1 | -1;
+
+export interface ChannelSort {
+  last_updated?: AscDesc;
+  last_message_at?: AscDesc;
+  updated_at?: AscDesc;
+  created_at?: AscDesc;
+  member_count?: AscDesc;
+  unread_count?: AscDesc;
+  has_unread?: AscDesc;
+  [key: string]: AscDesc | undefined;
+}
+
+export interface ChannelOptions {
+  state?: boolean;
+  watch?: boolean;
+  limit?: number;
+  offset?: number;
+  message_limit?: number;
+  presence?: boolean;
+}
+
+export interface ChannelListProps {
   EmptyStateIndicator?: React.ElementType<EmptyStateIndicatorProps>;
   /** The Preview to use, defaults to ChannelPreviewLastMessage */
   Preview?: React.ElementType<ChannelPreviewUIComponentProps>;
 
   /** The loading indicator to use */
   LoadingIndicator?: React.ElementType<LoadingIndicatorProps>;
-  LoadingErrorIndicator?: React.ElementType<LoadingErrorIndicatorProps>;
+  LoadingErrorIndicator?: React.ElementType<ChatDownProps>;
   List?: React.ElementType<ChannelListUIComponentProps>;
   Paginator?: React.ElementType<PaginatorProps>;
   lockChannelOrder?: boolean;
   onMessageNew?(
-    thisArg: React.Component<ChannelListProps>,
-    e: Client.Event<Client.MessageNewEvent>,
-  ): any;
+    thisArg: React.Dispatch<React.SetStateAction<Client.Channel[]>>,
+    e: Client.Event<string>,
+  ): void;
   /** Function that overrides default behaviour when users gets added to a channel */
   onAddedToChannel?(
-    thisArg: React.Component<ChannelListProps>,
-    e: Client.Event<Client.NotificationAddedToChannelEvent>,
-  ): any;
+    thisArg: React.Dispatch<React.SetStateAction<Client.Channel[]>>,
+    e: Client.Event<string>,
+  ): void;
   /** Function that overrides default behaviour when users gets removed from a channel */
   onRemovedFromChannel?(
-    thisArg: React.Component<ChannelListProps>,
-    e: Client.Event<Client.NotificationRemovedFromChannelEvent>,
-  ): any;
+    thisArg: React.Dispatch<React.SetStateAction<Client.Channel[]>>,
+    e: Client.Event<string>,
+  ): void;
+  onChannelHidden?(
+    thisArg: React.Dispatch<React.SetStateAction<Client.Channel[]>>,
+    e: Client.Event<string>,
+  ): void;
+  onChannelVisible?(
+    thisArg: React.Dispatch<React.SetStateAction<Client.Channel[]>>,
+    e: Client.Event<string>,
+  ): void;
   onChannelUpdated?(
-    thisArg: React.Component<ChannelListProps>,
-    e: Client.Event<Client.ChannelUpdatedEvent>,
-  ): any;
+    thisArg: React.Dispatch<React.SetStateAction<Client.Channel[]>>,
+    e: Client.Event<string>,
+  ): void;
   onChannelDeleted?(
-    thisArg: React.Component<ChannelListProps>,
-    e: Client.Event<Client.ChannelDeletedEvent>,
+    thisArg: React.Dispatch<React.SetStateAction<Client.Channel[]>>,
+    e: Client.Event<string>,
   ): void;
   onChannelTruncated?(
-    thisArg: React.Component<ChannelListProps>,
-    e: Client.Event<Client.ChannelTruncatedEvent>,
+    thisArg: React.Dispatch<React.SetStateAction<Client.Channel[]>>,
+    e: Client.Event<string>,
   ): void;
   setActiveChannelOnMount?: boolean;
   /** Object containing query filters */
-  filters: object;
+  filters: ChannelFilters;
   /** Object containing query options */
-  options?: object;
+  options?: ChannelOptions;
   /** Object containing sort parameters */
-  sort?: object;
+  sort?: ChannelSort;
   showSidebar?: boolean;
+  watchers?: { limit?: number; offset?: number };
+  customActiveChannel?: string;
 }
 
-export interface ChannelListUIComponentProps extends ChatContextValue {
+export interface ChannelListUIComponentProps {
   /** If channel list ran into error */
   error?: boolean;
   /** If channel list is in loading state */
   loading?: boolean;
+  sidebarImage?: string | null;
   showSidebar?: boolean;
   /**
    * Loading indicator UI Component. It will be displayed if `loading` prop is true.
@@ -225,14 +291,8 @@ export interface ChannelPreviewProps {
    *
    * The Preview to use, defaults to ChannelPreviewLastMessage
    * */
-  Preview?: React.ElementType<ChannelPreviewUIComponentProps>;
+  Preview?: React.ComponentType<ChannelPreviewUIComponentProps>;
   key: string;
-  /** Setter for selected channel */
-  setActiveChannel(
-    channel: Client.Channel,
-    watchers?: SeamlessImmutable.Immutable<{ [user_id: string]: Client.User }>,
-    e?: React.BaseSyntheticEvent,
-  ): void;
   // Following props is just to make sure preview component gets updated after connection is recovered.
   // It is not actually used anywhere internally
   connectionRecoveredCount?: number;
@@ -246,6 +306,12 @@ export interface ChannelPreviewUIComponentProps extends ChannelPreviewProps {
   displayImage?: string;
   /** Latest message's text. */
   latestMessage?: string;
+  setActiveChannel?(
+    channel?: Client.Channel,
+    watchers?: { limit?: number; offset?: number },
+    event?: React.SyntheticEvent,
+  ): void;
+
   /** Length of latest message to truncate at */
   latestMessageLength?: number;
   active?: boolean;
@@ -288,7 +354,7 @@ export interface LoadingIndicatorProps {
 }
 
 export interface LoadingErrorIndicatorProps extends TranslationContextValue {
-  error: boolean | object;
+  error?: Error | null;
 }
 
 export interface AvatarProps {
@@ -325,9 +391,7 @@ export interface SendButtonProps {
   sendMessage(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void;
 }
 
-export interface MessageListProps
-  extends ChannelContextValue,
-    TranslationContextValue {
+export interface MessageListProps {
   /** Typing indicator component to render  */
   TypingIndicator?: React.ElementType<TypingIndicatorProps>;
   /** Component to render at the top of the MessageList */
@@ -337,6 +401,7 @@ export interface MessageListProps
   LoadingIndicator?: React.ElementType<LoadingIndicatorProps>;
   /** Date separator component to render  */
   dateSeparator?: React.ElementType<DateSeparatorProps>;
+  DateSeparator?: React.ElementType<DateSeparatorProps>;
   /** Turn off grouping of messages by user */
   noGroupByUser?: boolean;
   /** Weather its a thread of no. Default - false  */
@@ -351,6 +416,40 @@ export interface MessageListProps
   getMuteUserSuccessNotification?(message: MessageResponse): string;
   getMuteUserErrorNotification?(message: MessageResponse): string;
   additionalMessageInputProps?: object;
+  client?: Client.StreamChat;
+  loadMore?(): any;
+  MessageSystem?: React.ElementType;
+  messages?: SeamlessImmutable.ImmutableArray<Client.MessageResponse>;
+  read?: {
+    [user_id: string]: SeamlessImmutable.Immutable<{
+      last_read: string;
+      user: Client.UserResponse;
+    }>;
+  };
+  hasMore?: boolean;
+  loadingMore?: boolean;
+  openThread?(): void;
+  members?: SeamlessImmutable.Immutable<{ [user_id: string]: Client.Member }>;
+  watchers?: SeamlessImmutable.Immutable<{ [user_id: string]: Client.Member }>;
+  channel?: Client.Channel;
+  retrySendMessage?(message: Client.Message): Promise<void>;
+
+  updateMessage?(
+    updatedMessage: Client.MessageResponse,
+    extraState?: object,
+  ): void;
+  removeMessage?(updatedMessage: Client.MessageResponse): void;
+  Message?: React.ElementType;
+  Attachment?: React.ElementType;
+  onMentionsClick?(
+    e: React.MouseEvent,
+    mentioned_users: Client.UserResponse[],
+  ): void;
+  /** Function to be called when hovering over a @mention. Function has access to the DOM event and the target user object */
+  onMentionsHover?(
+    e: React.MouseEvent,
+    mentioned_users: Client.UserResponse[],
+  ): void;
 }
 
 export interface ChannelHeaderProps {
@@ -365,13 +464,17 @@ export interface MessageInputProps {
   focus?: boolean;
   /** Disable input */
   disabled?: boolean;
+  /** enable/disable firing the typing event */
+  publishTypingEvent?: boolean;
   /** Grow the textarea while you're typing */
   grow?: boolean;
   /** Max number of rows the textarea is allowed to grow */
   maxRows?: number;
 
+  autocompleteTriggers?: object;
+
   /** The parent message object when replying on a thread */
-  parent?: Client.MessageResponse | null;
+  parent?: Client.MessageResponse;
 
   /** The component handling how the input is rendered */
   Input?: React.ElementType<MessageInputProps>;
@@ -460,9 +563,18 @@ export interface MessageInputEmojiPickerProps extends MessageInputState {
   small?: boolean;
 }
 
+export interface FileAttachmentProps {
+  attachment: Client.Attachment & { asset_url?: string };
+}
+
+export interface ExtendedAttachment extends Client.Attachment {
+  asset_url?: string;
+  mime_type?: string;
+}
+
 export interface AttachmentUIComponentProps {
   /** The attachment to render */
-  attachment: Client.Attachment;
+  attachment: ExtendedAttachment;
   /**
 		The handler function to call when an action is selected on an attachment.
 		Examples include canceling a \/giphy command or shuffling the results.
@@ -472,6 +584,12 @@ export interface AttachmentUIComponentProps {
     value: string,
     event: React.BaseSyntheticEvent,
   ): void;
+  Card?: React.ComponentType<CardProps>;
+  File?: React.ComponentType<FileAttachmentProps>;
+  Image?: React.ComponentType<ImageProps>;
+  Audio?: React.ComponentType<AudioProps>;
+  Media?: React.ComponentType<ReactPlayerProps>;
+  AttachmentActions?: React.ComponentType<AttachmentActionsProps>;
 }
 
 // MessageProps are all props shared between the Message component and the Message UI components (e.g. MessageSimple)
@@ -485,12 +603,13 @@ export interface MessageProps extends TranslationContextValue {
   readBy?: Array<Client.UserResponse>;
   /** groupStyles, a list of styles to apply to this message. ie. top, bottom, single etc */
   groupStyles?: Array<string>;
-  /** Editing, if the message is currently being edited */
-  editing?: boolean;
   /** The message rendering component, the Message component delegates its rendering logic to this component */
   Message?: React.ElementType<MessageUIComponentProps>;
   /** Message Deleted rendering component. Optional; if left undefined, the default of the Message rendering component is used */
   MessageDeleted?: React.ElementType<MessageDeletedProps>;
+
+  ReactionSelector?: React.ElementType<ReactionSelectorProps>;
+  ReactionsList?: React.ElementType<ReactionsListProps>;
   /** Allows you to overwrite the attachment component */
   Attachment?: React.ElementType<AttachmentUIComponentProps>;
   /** render HTML instead of markdown. Posting HTML is only allowed server-side */
@@ -502,17 +621,18 @@ export interface MessageProps extends TranslationContextValue {
     extraState?: object,
   ): void;
   additionalMessageInputProps?: object;
-  clearEditingState?(e?: React.MouseEvent): void;
   getFlagMessageSuccessNotification?(message: MessageResponse): string;
   getFlagMessageErrorNotification?(message: MessageResponse): string;
   getMuteUserSuccessNotification?(message: MessageResponse): string;
   getMuteUserErrorNotification?(message: MessageResponse): string;
-  setEditingState?(message: Client.MessageResponse): any;
+  /** Override the default formatting of the date. This is a function that has access to the original date object. Returns a string or Node  */
+  formatDate?(date: Date): string;
 }
 
 export type MessageComponentState = {
-  loading: boolean;
+  editing: boolean;
 };
+
 // MessageComponentProps defines the props for the Message component
 export interface MessageComponentProps
   extends MessageProps,
@@ -533,15 +653,17 @@ export interface MessageComponentProps
   onUserClick?(e: React.MouseEvent, user: Client.User): void;
   /** Function to be called when hovering the user that posted the message. Function has access to the DOM event and the target user object */
   onUserHover?(e: React.MouseEvent, user: Client.User): void;
-  messageActions?: Array<string>;
+  messageActions?: Array<string> | boolean;
   members?: SeamlessImmutable.Immutable<{ [user_id: string]: Client.Member }>;
-  retrySendMessage?(message: Client.Message): void;
+  retrySendMessage?(message: Client.Message): Promise<void>;
   removeMessage?(updatedMessage: Client.MessageResponse): void;
   mutes?: Client.Mute[];
   openThread?(
     message: Client.MessageResponse,
     event: React.SyntheticEvent,
   ): void;
+  initialMessage?: boolean;
+  threadList?: boolean;
 }
 
 // MessageUIComponentProps defines the props for the Message UI components (e.g. MessageSimple)
@@ -549,6 +671,9 @@ export interface MessageUIComponentProps
   extends MessageProps,
     TranslationContextValue {
   actionsEnabled?: boolean;
+  editing?: boolean;
+  clearEditingState?(event?: React.BaseSyntheticEvent): void;
+  setEditingState?(event?: React.BaseSyntheticEvent): void;
   handleReaction?(reactionType: string, event?: React.BaseSyntheticEvent): void;
   handleEdit?(event?: React.BaseSyntheticEvent): void;
   handleDelete?(event?: React.BaseSyntheticEvent): void;
@@ -569,21 +694,25 @@ export interface MessageUIComponentProps
   onUserClick?(e: React.MouseEvent): void;
   onUserHover?(e: React.MouseEvent): void;
   getMessageActions(): Array<string>;
-  channelConfig?: Client.ChannelConfigWithInfo;
+  channelConfig?: Client.ChannelConfig | Client.ChannelConfigWithInfo;
   threadList?: boolean;
   additionalMessageInputProps?: object;
   initialMessage?: boolean;
 }
-
 export interface MessageDeletedProps extends TranslationContextValue {
   /** The message object */
   message: Client.MessageResponse;
   isMyMessage?(message: Client.MessageResponse): boolean;
 }
 
-export interface ThreadProps
-  extends ChannelContextValue,
-    TranslationContextValue {
+export interface ThreadProps {
+  Message?: React.ElementType<MessageUIComponentProps>;
+  threadLoadingMore?: boolean;
+  threadHasMore?: boolean;
+  thread?: SeamlessImmutable.Immutable<Client.MessageResponse> | null;
+  threadMessages?: SeamlessImmutable.ImmutableArray<Client.MessageResponse>;
+  channel?: Client.Channel;
+  loadMoreThread?(): void;
   /** Display the thread on 100% width of it's container. Useful for mobile style view */
   fullWidth?: boolean;
   /** Make input focus on mounting thread */
@@ -720,6 +849,7 @@ export interface ChatAutoCompleteProps {
   minChar?: number;
   onSelectItem?(item: any): any;
   commands?: Client.CommandResponse[];
+  triggers?: object;
   onFocus?: React.FocusEventHandler;
   onPaste?: React.ClipboardEventHandler;
   additionalTextareaProps?: object;
@@ -970,14 +1100,7 @@ export const InfiniteScrollPaginator: React.FC<InfiniteScrollPaginatorProps>;
 export const LoadingIndicator: React.FC<LoadingIndicatorProps>;
 
 export interface MessageCommerceProps extends MessageUIComponentProps {}
-export type MessageCommerceState = {
-  isFocused: boolean;
-  showDetailedReactions: boolean;
-};
-export class MessageCommerce extends React.PureComponent<
-  MessageCommerceProps,
-  MessageCommerceState
-> {}
+export const MessageCommerce: React.FC<MessageCommerceProps>;
 
 export interface MessageLivestreamProps extends MessageUIComponentProps {}
 export interface MessageLivestreamActionProps {
@@ -990,7 +1113,8 @@ export interface MessageLivestreamActionProps {
   onReactionListClick?: () => void;
   getMessageActions(): Array<string>;
   messageWrapperRef?: React.RefObject<HTMLElement>;
-  setEditingState?(message: Client.MessageResponse): any;
+  setEditingState?(event?: React.BaseSyntheticEvent): void;
+  formatDate?(date: Date): string;
 }
 export const MessageLivestream: React.FC<MessageLivestreamProps>;
 export type MessageTeamState = {
@@ -1020,6 +1144,16 @@ export class MessageTeam extends React.PureComponent<
 > {}
 
 export interface MessageSimpleProps extends MessageUIComponentProps {}
+export interface MessageTimestampProps {
+  customClass?: string;
+  message?: Client.MessageResponse;
+  calendar?: boolean;
+  format?: string;
+  tDateTimeParser?(datetime: string | number): Dayjs.Dayjs;
+  /** Override the default formatting of the date. This is a function that has access to the original date object. Returns a string or Node  */
+  formatDate?(date: Date): string;
+}
+
 export interface MessageTextProps extends MessageSimpleProps {
   customOptionProps?: Partial<MessageOptionsProps>;
   customInnerClass?: string;
@@ -1042,7 +1176,7 @@ export interface MessageActionsProps {
   getFlagMessageErrorNotification?(message: MessageResponse): string;
   getMuteUserSuccessNotification?(message: MessageResponse): string;
   getMuteUserErrorNotification?(message: MessageResponse): string;
-  setEditingState?(message: Client.MessageResponse): any;
+  setEditingState?(event?: React.BaseSyntheticEvent): void;
   messageListRect?: DOMRect;
   message?: Client.MessageResponse;
   messageWrapperRef?: React.RefObject<HTMLElement>;
@@ -1115,9 +1249,8 @@ export interface MinimalEmojiInterface
 }
 
 export function renderText(
-  message:
-    | SeamlessImmutable.Immutable<Client.MessageResponse>
-    | Client.MessageResponse,
+  messageText?: string,
+  mentioned_users?: Client.UserResponse[],
 ): ReactMarkdown;
 export function smartRender(
   ElementOrComponentOrLiteral: ElementOrComponentOrLiteral,

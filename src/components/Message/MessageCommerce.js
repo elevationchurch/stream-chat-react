@@ -1,12 +1,14 @@
 // @ts-check
-import React, { useContext, useRef } from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
-import { TranslationContext } from '../../context';
 import { smartRender } from '../../utils';
 import { Attachment as DefaultAttachment } from '../Attachment';
 import { Avatar } from '../Avatar';
 import { Gallery } from '../Gallery';
-import { ReactionsList, ReactionSelector } from '../Reactions';
+import {
+  ReactionsList as DefaultReactionsList,
+  ReactionSelector as DefaultReactionSelector,
+} from '../Reactions';
 import MessageRepliesCountButton from './MessageRepliesCountButton';
 import {
   areMessagePropsEqual,
@@ -14,8 +16,8 @@ import {
   messageHasAttachments,
   getImages,
 } from './utils';
-import { MessageOptions } from './MessageOptions';
-import { MessageText } from './MessageText';
+import MessageOptions from './MessageOptions';
+import MessageText from './MessageText';
 import {
   useUserRole,
   useReactionClick,
@@ -24,6 +26,7 @@ import {
   useOpenThreadHandler,
   useUserHandler,
 } from './hooks';
+import MessageTimestamp from './MessageTimestamp';
 
 /**
  * MessageCommerce - Render component, should be used together with the Message component
@@ -34,11 +37,14 @@ import {
 const MessageCommerce = (props) => {
   const {
     message,
+    formatDate,
     groupStyles,
     actionsEnabled,
     threadList,
     MessageDeleted,
     getMessageActions,
+    ReactionsList = DefaultReactionsList,
+    ReactionSelector = DefaultReactionSelector,
     handleReaction: propHandleReaction,
     handleAction: propHandleAction,
     handleOpenThread: propHandleOpenThread,
@@ -51,24 +57,15 @@ const MessageCommerce = (props) => {
   const handleAction = useActionHandler(message);
   const handleReaction = useReactionHandler(message);
   const handleOpenThread = useOpenThreadHandler(message);
-  const { tDateTimeParser } = useContext(TranslationContext);
   const reactionSelectorRef = useRef(null);
   const { onReactionListClick, showDetailedReactions } = useReactionClick(
+    message,
     reactionSelectorRef,
-    message,
   );
-  const { onUserClick, onUserHover } = useUserHandler(
-    {
-      onUserClickHandler: propOnUserClick,
-      onUserHoverHandler: propOnUserHover,
-    },
-    message,
-  );
-  const dateTimeParser = propTDateTimeParser || tDateTimeParser;
-  const when =
-    message &&
-    dateTimeParser &&
-    dateTimeParser(message.created_at).format('LT');
+  const { onUserClick, onUserHover } = useUserHandler(message, {
+    onUserClickHandler: propOnUserClick,
+    onUserHoverHandler: propOnUserHover,
+  });
   const { isMyMessage } = useUserRole(message);
   const messageClasses = `str-chat__message-commerce str-chat__message-commerce--${
     isMyMessage ? 'right' : 'left'
@@ -154,21 +151,20 @@ const MessageCommerce = (props) => {
 
           {message?.attachments &&
             (!images || images.length <= 1) &&
-            message.attachments.map(
-              /** @type {(item: import('stream-chat').Attachment) => React.ReactElement | null} Typescript syntax */
-              (attachment, index) => (
-                // @ts-ignore
-                <Attachment
-                  key={`${message.id}-${index}`}
-                  attachment={attachment}
-                  actionHandler={propHandleAction || handleAction}
-                />
-              ),
-            )}
+            message.attachments.map((attachment, index) => (
+              <Attachment
+                key={`${message.id}-${index}`}
+                attachment={attachment}
+                actionHandler={propHandleAction || handleAction}
+              />
+            ))}
+
           {!!images.length && <Gallery images={images} />}
 
           {message?.text && (
             <MessageText
+              ReactionSelector={ReactionSelector}
+              ReactionsList={ReactionsList}
               actionsEnabled={actionsEnabled}
               customWrapperClass="str-chat__message-commerce-text"
               customInnerClass="str-chat__message-commerce-text-inner"
@@ -201,7 +197,13 @@ const MessageCommerce = (props) => {
                 {message?.user?.name || message?.user?.id}
               </span>
             ) : null}
-            <span className="str-chat__message-commerce-timestamp">{when}</span>
+            <MessageTimestamp
+              formatDate={formatDate}
+              customClass="str-chat__message-commerce-timestamp"
+              message={message}
+              tDateTimeParser={propTDateTimeParser}
+              format="LT"
+            />
           </div>
         </div>
       </div>
@@ -211,14 +213,13 @@ const MessageCommerce = (props) => {
 
 MessageCommerce.propTypes = {
   /** The [message object](https://getstream.io/chat/docs/#message_format) */
-  // @ts-ignore
-  message: PropTypes.object,
+  message: /** @type {PropTypes.Validator<import('stream-chat').MessageResponse>} */ (PropTypes
+    .object.isRequired),
   /**
    * The attachment UI component.
    * Default: [Attachment](https://github.com/GetStream/stream-chat-react/blob/master/src/components/Attachment.js)
    * */
-  // @ts-ignore
-  Attachment: PropTypes.elementType,
+  Attachment: /** @type {PropTypes.Validator<React.ElementType<import('types').AttachmentUIComponentProps>>} */ (PropTypes.elementType),
   /**
    *
    * @deprecated Its not recommended to use this anymore. All the methods in this HOC are provided explicitly.
@@ -227,19 +228,19 @@ MessageCommerce.propTypes = {
    * @see See [Message HOC](https://getstream.github.io/stream-chat-react/#message) for example
    *
    */
-  // @ts-ignore
-  Message: PropTypes.oneOfType([
-    PropTypes.node,
-    PropTypes.func,
-    PropTypes.object,
-  ]),
+  Message: /** @type {PropTypes.Validator<React.ElementType<import('types').MessageUIComponentProps>>} */ (PropTypes.oneOfType(
+    [PropTypes.node, PropTypes.func, PropTypes.object],
+  )),
   /** render HTML instead of markdown. Posting HTML is only allowed server-side */
   unsafeHTML: PropTypes.bool,
   /** If its parent message in thread. */
   initialMessage: PropTypes.bool,
   /** Channel config object */
-  // @ts-ignore
-  channelConfig: PropTypes.object,
+  channelConfig: /** @type {PropTypes.Validator<import('stream-chat').ChannelConfig>} */ (PropTypes.object),
+
+  /** Override the default formatting of the date. This is a function that has access to the original date object. Returns a string or Node  */
+  formatDate: PropTypes.func,
+
   /** If component is in thread list */
   threadList: PropTypes.bool,
   /**
@@ -251,8 +252,7 @@ MessageCommerce.propTypes = {
   /** Returns true if message belongs to current user */
   isMyMessage: PropTypes.func,
   /** Returns all allowed actions on message by current user e.g., [edit, delete, flag, mute] */
-  // @ts-ignore
-  getMessageActions: PropTypes.func,
+  getMessageActions: PropTypes.func.isRequired,
   /**
    * Add or remove reaction on message
    *
@@ -261,11 +261,17 @@ MessageCommerce.propTypes = {
    * @deprecated This component now relies on the useReactionHandler custom hook.
    */
   handleReaction: PropTypes.func,
+  /**
+   * A component to display the selector that allows a user to react to a certain message.
+   */
+  ReactionSelector: /** @type {PropTypes.Validator<React.ElementType<import('types').ReactionSelectorProps>>} */ (PropTypes.elementType),
+  /**
+   * A component to display the a message list of reactions.
+   */
+  ReactionsList: /** @type {PropTypes.Validator<React.ElementType<import('types').ReactionsListProps>>} */ (PropTypes.elementType),
   /** If actions such as edit, delete, flag, mute are enabled on message */
   actionsEnabled: PropTypes.bool,
   /**
-   * Handler for actions. Actions in combination with attachments can be used to build [commands](https://getstream.io/chat/docs/#channel_commands).
-   *
    * @param name {string} Name of action
    * @param value {string} Value of action
    * @param event Dom event that triggered this handler
@@ -305,8 +311,7 @@ MessageCommerce.propTypes = {
   /** The component that will be rendered if the message has been deleted.
    * All of Message's props are passed into this component.
    */
-  // @ts-ignore
-  MessageDeleted: PropTypes.elementType,
+  MessageDeleted: /** @type {PropTypes.Validator<React.ElementType<import('types').MessageDeletedProps>>} */ (PropTypes.elementType),
 };
 
 export default React.memo(MessageCommerce, areMessagePropsEqual);
