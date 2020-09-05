@@ -24,6 +24,7 @@ export const useChannelTruncatedListener = (
       if (customHandler && typeof customHandler === 'function') {
         customHandler(setChannels, e);
       }
+      // eslint-disable-next-line babel/no-unused-expressions
       forceUpdate?.();
     };
 

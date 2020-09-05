@@ -70,6 +70,7 @@ const MessageTimestamp = (props) => {
         tDateTimeParser,
         format,
       ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [formatDate, calendar, tDateTimeParser, format, message?.created_at],
   );
 

@@ -47,6 +47,7 @@ const MessageTextComponent = (props) => {
   const handleReaction = useReactionHandler(message);
   const messageText = useMemo(
     () => renderText(message?.text, message?.mentioned_users),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [message?.text, message?.mentioned_users],
   );
   const wrapperClass = customWrapperClass || 'str-chat__message-text';

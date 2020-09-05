@@ -73,6 +73,7 @@ const ChannelList = (props) => {
         (chan) => chan.id === customActiveChannel,
       );
       if (customActiveChannelObject) {
+        // eslint-disable-next-line babel/no-unused-expressions
         setActiveChannel?.(customActiveChannelObject, watchers);
         const newChannels = moveChannelUp(
           customActiveChannelObject.cid,
@@ -85,6 +86,7 @@ const ChannelList = (props) => {
     }
 
     if (setActiveChannelOnMount) {
+      // eslint-disable-next-line babel/no-unused-expressions
       setActiveChannel?.(channels[0], watchers);
     }
   };
@@ -139,6 +141,7 @@ const ChannelList = (props) => {
     /** @param {import('stream-chat').Event<string>} e */
     const handleEvent = (e) => {
       if (e?.cid === channel?.cid) {
+        // eslint-disable-next-line babel/no-unused-expressions
         setActiveChannel?.();
       }
     };

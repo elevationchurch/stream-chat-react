@@ -470,6 +470,7 @@ describe('Channel', () => {
             jest
               .spyOn(channel, 'sendMessage')
               .mockImplementationOnce(() => new Promise(() => {}));
+            // eslint-disable-next-line jest/no-if
             if (!hasSent) sendMessage({ text: messageText });
             hasSent = true;
           },
@@ -700,13 +701,17 @@ describe('Channel', () => {
         );
         let threadStarterHasUpdatedText = false;
         renderComponent({}, ({ openThread, thread }) => {
+          // eslint-disable-next-line jest/no-if
           if (!thread) {
             // first, open thread
             openThread(threadMessage);
+            /* istanbul ignore next */
+            // eslint-disable-next-line jest/no-if
           } else if (thread.text !== newText) {
             // then, update the thread message
             // FIXME: dispatch event needs to be queued on event loop now
             setTimeout(() => dispatchUpdateMessageEvent(), 0);
+            /* istanbul ignore next */
           } else {
             threadStarterHasUpdatedText = true;
           }

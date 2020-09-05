@@ -22,12 +22,14 @@ export const useEditHandler = (
   const setEdit =
     customSetEditing ||
     ((event) => {
+      // eslint-disable-next-line babel/no-unused-expressions
       event?.preventDefault();
       setEditing(true);
     });
   const clearEdit =
     customClearEditingHandler ||
     ((event) => {
+      // eslint-disable-next-line babel/no-unused-expressions
       event?.preventDefault();
       setEditing(false);
     });

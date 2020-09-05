@@ -1,9 +1,6 @@
 {
   "name": "@elevationdigital/stream-chat-react",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
-  },
-  "version": "2.2.3",
+  "version": "2.2.2",
   "description": "React components to create chat conversations or livestream style chat",
   "author": "GetStream",
   "homepage": "https://getstream.io/chat/",
@@ -137,6 +134,11 @@
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "~3.11.0"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "dotgit/hooks/pre-commit-format.sh && dotgit/hooks/pre-commit-reject-binaries.py"
+    }
+  },
   "scripts": {
     "test": "rm -rf built && jest",
     "coverage": "yarn test --collectCoverage && codecov",
@@ -157,8 +159,8 @@
     "build-translations": "rm -rf .tmpi18ncache || true && mkdir .tmpi18ncache && yarn run babel --config-file ./babel.i18next-extract.js 'src/**/*.{js,jsx,ts,tsx}' --out-dir '.tmpi18ncache/' && rm -rf .tmpi18ncache && prettier --write 'src/i18n/*.{js,json}'",
     "validate-translations": "node scripts/validate-translations.js",
     "prepare": "yarn run build",
-    "preversion": "git add yarn.lock",
-    "version": "yarn docs && git add docs && git add yarn.lock",
+    "preversion": "make example-deps && git add yarn.lock && git add examples/*/yarn.lock",
+    "version": "yarn docs && git add docs && git add yarn.lock examples/*/yarn.lock",
     "postversion": "git push && git push --tags && npm publish"
   },
   "stylelint": {

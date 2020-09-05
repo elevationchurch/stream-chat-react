@@ -33,6 +33,7 @@ export const useChannelUpdatedListener = (
 
         return channels;
       });
+      // eslint-disable-next-line babel/no-unused-expressions
       forceUpdate?.();
       if (customHandler && typeof customHandler === 'function') {
         customHandler(setChannels, e);

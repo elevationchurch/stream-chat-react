@@ -22,6 +22,7 @@ export const useMobileNavigation = (
         ) &&
         navOpen
       ) {
+        // eslint-disable-next-line babel/no-unused-expressions
         closeMobileNav?.();
       }
     };

@@ -121,6 +121,7 @@ const MessageTeam = (props) => {
   });
   const messageText = useMemo(
     () => renderText(message?.text, message?.mentioned_users),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [message?.text, message?.mentioned_users],
   );
   const galleryImages = getImages(message);
