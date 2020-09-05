@@ -3,6 +3,9 @@ import { useContext } from 'react';
 import { isUserMuted, validateAndGetMessage } from '../utils';
 import { ChannelContext, TranslationContext } from '../../../context';
 
+export const missingUseMuteHandlerParamsWarning =
+  'useMuteHandler was called but it is missing one or more necessary parameter.';
+
 /**
  * @typedef {{
  *   notify?: import('types').MessageComponentProps['addNotification'],
@@ -11,15 +14,8 @@ import { ChannelContext, TranslationContext } from '../../../context';
  * }} NotificationArg
  * @type {(message: import('stream-chat').MessageResponse | undefined, notification: NotificationArg) => (event: React.MouseEvent<HTMLElement>) => Promise<void>}
  */
-export const useMuteHandler = (message, notifications) => {
-  /**
-   *@type {import('types').ChannelContextValue}
-   */
+export const useMuteHandler = (message, notifications = {}) => {
   const { client, mutes } = useContext(ChannelContext);
-
-  /**
-   *@type {import('types').TranslationContextValue}
-   */
   const { t } = useContext(TranslationContext);
 
   /** @type {(event: React.MouseEvent<HTMLElement>) => Promise<void>} Typescript syntax */
@@ -32,6 +28,7 @@ export const useMuteHandler = (message, notifications) => {
     } = notifications;
 
     if (!t || !message?.user || !notify || !client) {
+      console.warn(missingUseMuteHandlerParamsWarning);
       return;
     }
     if (!isUserMuted(message, mutes)) {

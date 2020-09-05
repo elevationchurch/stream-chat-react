@@ -1,21 +1,26 @@
 // @ts-check
-import React, { useContext, useRef } from 'react';
+import React, { useMemo, useContext, useRef } from 'react';
 import { isOnlyEmojis, renderText } from '../../utils';
 import { TranslationContext } from '../../context';
-import { ReactionsList, ReactionSelector } from '../Reactions';
 import {
-  useMentionsHandler,
+  ReactionsList as DefaultReactionList,
+  ReactionSelector as DefaultReactionSelector,
+} from '../Reactions';
+import {
   useReactionHandler,
   useReactionClick,
+  useMentionsUIHandler,
 } from './hooks';
 import { messageHasReactions, messageHasAttachments } from './utils';
-import { MessageOptions } from './MessageOptions';
+import MessageOptions from './MessageOptions';
 
 /**
  * @type { React.FC<import('types').MessageTextProps> }
  */
 const MessageTextComponent = (props) => {
   const {
+    ReactionsList = DefaultReactionList,
+    ReactionSelector = DefaultReactionSelector,
     onMentionsClickMessage: propOnMentionsClick,
     onMentionsHoverMessage: propOnMentionsHover,
     customWrapperClass,
@@ -25,22 +30,31 @@ const MessageTextComponent = (props) => {
     unsafeHTML,
     customOptionProps,
   } = props;
-  const reactionSelectorRef = useRef(null);
-  const { onMentionsClick, onMentionsHover } = useMentionsHandler(message);
+  const reactionSelectorRef = useRef(
+    /** @type {HTMLDivElement | null} */ (null),
+  );
+  const { onMentionsClick, onMentionsHover } = useMentionsUIHandler(message, {
+    onMentionsClick: propOnMentionsClick,
+    onMentionsHover: propOnMentionsHover,
+  });
   const { onReactionListClick, showDetailedReactions } = useReactionClick(
-    reactionSelectorRef,
     message,
+    reactionSelectorRef,
   );
   const { t } = useContext(TranslationContext);
   const hasReactions = messageHasReactions(message);
   const hasAttachment = messageHasAttachments(message);
   const handleReaction = useReactionHandler(message);
+  const messageText = useMemo(
+    () => renderText(message?.text, message?.mentioned_users),
+    [message?.text, message?.mentioned_users],
+  );
   const wrapperClass = customWrapperClass || 'str-chat__message-text';
   const innerClass =
     customInnerClass ||
     `str-chat__message-text-inner str-chat__message-${theme}-text-inner`;
 
-  if (!message || !message.text) {
+  if (!message?.text) {
     return null;
   }
 
@@ -61,8 +75,8 @@ const MessageTextComponent = (props) => {
               : ''
           }
         `.trim()}
-        onMouseOver={propOnMentionsHover || onMentionsHover}
-        onClick={propOnMentionsClick || onMentionsClick}
+        onMouseOver={onMentionsHover}
+        onClick={onMentionsClick}
       >
         {message.type === 'error' && (
           <div className={`str-chat__${theme}-message--error-message`}>
@@ -78,7 +92,7 @@ const MessageTextComponent = (props) => {
         {unsafeHTML ? (
           <div dangerouslySetInnerHTML={{ __html: message.html }} />
         ) : (
-          renderText(message)
+          messageText
         )}
 
         {/* if reactions show them */}
@@ -109,4 +123,4 @@ const MessageTextComponent = (props) => {
   );
 };
 
-export const MessageText = React.memo(MessageTextComponent);
+export default React.memo(MessageTextComponent);

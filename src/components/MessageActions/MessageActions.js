@@ -1,14 +1,14 @@
 // @ts-check
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import MessageActionsBox from './MessageActionsBox';
 import {
   useDeleteHandler,
   useUserRole,
   useFlagHandler,
-  useEditHandler,
   useMuteHandler,
 } from '../Message/hooks';
 import { isUserMuted } from '../Message/utils';
+import { ChatContext } from '../../context';
 
 /**
  * @type { React.FC<import('types').MessageActionsProps> }
@@ -17,7 +17,6 @@ export const MessageActions = (props) => {
   const {
     addNotification,
     message,
-    mutes,
     getMessageActions,
     messageListRect,
     messageWrapperRef,
@@ -28,16 +27,15 @@ export const MessageActions = (props) => {
     getFlagMessageSuccessNotification,
     handleFlag: propHandleFlag,
     handleMute: propHandleMute,
-    handleEdit: propHandleEdit,
     handleDelete: propHandleDelete,
     inline,
     customWrapperClass,
   } = props;
+  const { mutes } = useContext(ChatContext);
   const messageActions = getMessageActions();
   const [actionsBoxOpen, setActionsBoxOpen] = useState(false);
   const { isMyMessage } = useUserRole(message);
   const handleDelete = useDeleteHandler(message);
-  const handleEdit = useEditHandler(message, setEditingState);
   const handleFlag = useFlagHandler(message, {
     notify: addNotification,
     getSuccessNotification: getFlagMessageErrorNotification,
@@ -93,7 +91,7 @@ export const MessageActions = (props) => {
         handleFlag={propHandleFlag || handleFlag}
         isUserMuted={isMuted}
         handleMute={propHandleMute || handleMute}
-        handleEdit={propHandleEdit || handleEdit}
+        handleEdit={setEditingState}
         handleDelete={propHandleDelete || handleDelete}
         mine={isMyMessage}
       />

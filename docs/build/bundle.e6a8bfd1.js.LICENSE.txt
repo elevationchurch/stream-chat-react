@@ -12,9 +12,9 @@
 
 /*! exports provided: Aacute, aacute, Acirc, acirc, acute, AElig, aelig, Agrave, agrave, amp, AMP, Aring, aring, Atilde, atilde, Auml, auml, brvbar, Ccedil, ccedil, cedil, cent, copy, COPY, curren, deg, divide, Eacute, eacute, Ecirc, ecirc, Egrave, egrave, ETH, eth, Euml, euml, frac12, frac14, frac34, gt, GT, Iacute, iacute, Icirc, icirc, iexcl, Igrave, igrave, iquest, Iuml, iuml, laquo, lt, LT, macr, micro, middot, nbsp, not, Ntilde, ntilde, Oacute, oacute, Ocirc, ocirc, Ograve, ograve, ordf, ordm, Oslash, oslash, Otilde, otilde, Ouml, ouml, para, plusmn, pound, quot, QUOT, raquo, reg, REG, sect, shy, sup1, sup2, sup3, szlig, THORN, thorn, times, Uacute, uacute, Ucirc, ucirc, Ugrave, ugrave, uml, Uuml, uuml, Yacute, yacute, yen, yuml, default */
 
-/*! exports provided: Attachment, Card, Audio, AttachmentActions, File */
+/*! exports provided: Attachment, Card, Audio, AttachmentActions, FileAttachment */
 
-/*! exports provided: Attachment, Card, Audio, AttachmentActions, File, AutoCompleteTextarea, KEY_CODES, Item, List, defaultScrollToItem, listener, Avatar, ChannelPreview, ChannelPreviewCompact, ChannelPreviewCountOnly, ChannelPreviewLastMessage, ChannelPreviewMessenger, Channel, ChannelHeader, ChannelList, ChannelListMessenger, ChannelListTeam, ChannelSearch, Chat, ChatAutoComplete, ChatDown, CommandItem, DateSeparator, EmoticonItem, EmptyStateIndicator, EventComponent, Gallery, Image, ModalImage, ModalWrapper, InfiniteScroll, InfiniteScrollPaginator, ReverseInfiniteScroll, LoadingChannels, LoadingErrorIndicator, LoadingIndicator, LoadMoreButton, LoadMorePaginator, Message, MessageCommerce, MessageLivestream, MessageSimple, MessageTeam, MessageRepliesCountButton, MessageActionsBox, MessageActions, MessageInput, MessageInputFlat, MessageInputLarge, MessageInputSmall, EditMessageForm, SendButton, MessageList, MessageNotification, Modal, ReactionSelector, ReactionsList, SimpleReactionsList, SafeAnchor, Thread, Tooltip, TypingIndicator, UserItem, Window */
+/*! exports provided: Attachment, Card, Audio, AttachmentActions, FileAttachment, AutoCompleteTextarea, KEY_CODES, Item, List, defaultScrollToItem, listener, Avatar, ChannelPreview, ChannelPreviewCompact, ChannelPreviewCountOnly, ChannelPreviewLastMessage, ChannelPreviewMessenger, Channel, useChannelEditMessageHandler, useChannelMentionsHandler, ChannelHeader, ChannelList, ChannelListMessenger, ChannelListTeam, ChannelSearch, Chat, ChatAutoComplete, ChatDown, CommandItem, DateSeparator, EmoticonItem, EmptyStateIndicator, EventComponent, Gallery, Image, ModalImage, ModalWrapper, InfiniteScroll, InfiniteScrollPaginator, ReverseInfiniteScroll, LoadingChannels, LoadingErrorIndicator, LoadingIndicator, LoadMoreButton, LoadMorePaginator, Message, MessageCommerce, MessageLivestream, MessageSimple, MessageTeam, MessageRepliesCountButton, MessageOptions, MessageText, handleActionWarning, useActionHandler, useDeleteHandler, useEditHandler, missingUseFlagHandlerParameterWarning, useFlagHandler, useMentionsHandler, useMentionsUIHandler, missingUseMuteHandlerParamsWarning, useMuteHandler, useOpenThreadHandler, reactionHandlerWarning, useReactionHandler, useReactionClick, useRetryHandler, useUserHandler, useUserRole, validateAndGetMessage, isUserMuted, MESSAGE_ACTIONS, getMessageActions, areMessagePropsEqual, shouldMessageComponentUpdate, messageHasReactions, messageHasAttachments, getImages, getNonImageAttachments, MessagePropTypes, MessageActionsBox, MessageActions, MessageInput, MessageInputFlat, MessageInputLarge, MessageInputSmall, EditMessageForm, SendButton, useMessageInput, MessageList, MessageNotification, Modal, ReactionSelector, ReactionsList, SimpleReactionsList, SafeAnchor, Thread, Tooltip, TypingIndicator, UserItem, Window */
 
 /*! exports provided: AttachmentIcon, FileIcon, FilePreviewer, FileUploadButton, IconButton, ImageDropzone, ImagePreviewer, ImageUploadButton, LoadingIndicator, PictureIcon, Thumbnail, ThumbnailPlaceholder, dataTransferItemsHaveFiles, dataTransferItemsToFiles */
 
@@ -28,7 +28,7 @@
 
 /*! exports provided: BlockquoteRenderer, default */
 
-/*! exports provided: Channel */
+/*! exports provided: Channel, useChannelEditMessageHandler, useChannelMentionsHandler */
 
 /*! exports provided: ChannelContext, withChannelContext */
 
@@ -37,8 +37,6 @@
 /*! exports provided: ChannelList, ChannelListMessenger, ChannelListTeam */
 
 /*! exports provided: ChannelListMessenger, default */
-
-/*! exports provided: ChannelListTeam, default */
 
 /*! exports provided: ChannelPreview, ChannelPreviewCompact, ChannelPreviewCountOnly, ChannelPreviewLastMessage, ChannelPreviewMessenger */
 
@@ -136,19 +134,15 @@
 
 /*! exports provided: Md3DRotation, MdAccessibility, MdAccessible, MdAccountBalance, MdAccountBalanceWallet, MdAccountBox, MdAccountCircle, MdAddShoppingCart, MdAlarm, MdAlarmAdd, MdAlarmOff, MdAlarmOn, MdAllOut, MdAndroid, MdAnnouncement, MdAspectRatio, MdAssessment, MdAssignment, MdAssignmentInd, MdAssignmentLate, MdAssignmentReturn, MdAssignmentReturned, MdAssignmentTurnedIn, MdAutorenew, MdBackup, MdBook, MdBookmark, MdBookmarkBorder, MdBugReport, MdBuild, MdCached, MdCameraEnhance, MdCardGiftcard, MdCardMembership, MdCardTravel, MdChangeHistory, MdCheckCircle, MdChromeReaderMode, MdClass, MdCode, MdCompareArrows, MdCopyright, MdCreditCard, MdDashboard, MdDateRange, MdDelete, MdDeleteForever, MdDescription, MdDns, MdDone, MdDoneAll, MdDonutLarge, MdDonutSmall, MdEject, MdEuroSymbol, MdEvent, MdEventSeat, MdExitToApp, MdExplore, MdExtension, MdFace, MdFavorite, MdFavoriteBorder, MdFeedback, MdFindInPage, MdFindReplace, MdFingerprint, MdFlightLand, MdFlightTakeoff, MdFlipToBack, MdFlipToFront, MdGTranslate, MdGavel, MdGetApp, MdGif, MdGrade, MdGroupWork, MdHelp, MdHelpOutline, MdHighlightOff, MdHistory, MdHome, MdHourglassEmpty, MdHourglassFull, MdHttp, MdHttps, MdImportantDevices, MdInfo, MdInfoOutline, MdInput, MdInvertColors, MdLabel, MdLabelOutline, MdLanguage, MdLaunch, MdLightbulbOutline, MdLineStyle, MdLineWeight, MdList, MdLock, MdLockOpen, MdLockOutline, MdLoyalty, MdMarkunreadMailbox, MdMotorcycle, MdNoteAdd, MdOfflinePin, MdOpacity, MdOpenInBrowser, MdOpenInNew, MdOpenWith, MdPageview, MdPanTool, MdPayment, MdPermCameraMic, MdPermContactCalendar, MdPermDataSetting, MdPermDeviceInformation, MdPermIdentity, MdPermMedia, MdPermPhoneMsg, MdPermScanWifi, MdPets, MdPictureInPicture, MdPictureInPictureAlt, MdPlayForWork, MdPolymer, MdPowerSettingsNew, MdPregnantWoman, MdPrint, MdQueryBuilder, MdQuestionAnswer, MdReceipt, MdRecordVoiceOver, MdRedeem, MdRemoveShoppingCart, MdReorder, MdReportProblem, MdRestore, MdRestorePage, MdRoom, MdRoundedCorner, MdRowing, MdSchedule, MdSearch, MdSettings, MdSettingsApplications, MdSettingsBackupRestore, MdSettingsBluetooth, MdSettingsBrightness, MdSettingsCell, MdSettingsEthernet, MdSettingsInputAntenna, MdSettingsInputComponent, MdSettingsInputComposite, MdSettingsInputHdmi, MdSettingsInputSvideo, MdSettingsOverscan, MdSettingsPhone, MdSettingsPower, MdSettingsRemote, MdSettingsVoice, MdShop, MdShopTwo, MdShoppingBasket, MdShoppingCart, MdSpeakerNotes, MdSpeakerNotesOff, MdSpellcheck, MdStars, MdStore, MdSubject, MdSupervisorAccount, MdSwapHoriz, MdSwapVert, MdSwapVerticalCircle, MdSystemUpdateAlt, MdTab, MdTabUnselected, MdTheaters, MdThumbDown, MdThumbUp, MdThumbsUpDown, MdTimeline, MdToc, MdToday, MdToll, MdTouchApp, MdTrackChanges, MdTranslate, MdTrendingDown, MdTrendingFlat, MdTrendingUp, MdTurnedIn, MdTurnedInNot, MdUpdate, MdVerifiedUser, MdViewAgenda, MdViewArray, MdViewCarousel, MdViewColumn, MdViewDay, MdViewHeadline, MdViewList, MdViewModule, MdViewQuilt, MdViewStream, MdViewWeek, MdVisibility, MdVisibilityOff, MdWatchLater, MdWork, MdYoutubeSearchedFor, MdZoomIn, MdZoomOut, MdAddAlert, MdError, MdErrorOutline, MdWarning, MdAddToQueue, MdAirplay, MdAlbum, MdArtTrack, MdAvTimer, MdBrandingWatermark, MdCallToAction, MdClosedCaption, MdEqualizer, MdExplicit, MdFastForward, MdFastRewind, MdFeaturedPlayList, MdFeaturedVideo, MdFiberDvr, MdFiberManualRecord, MdFiberNew, MdFiberPin, MdFiberSmartRecord, MdForward10, MdForward30, MdForward5, MdGames, MdHd, MdHearing, MdHighQuality, MdLibraryAdd, MdLibraryBooks, MdLibraryMusic, MdLoop, MdMic, MdMicNone, MdMicOff, MdMovie, MdMusicVideo, MdNewReleases, MdNotInterested, MdNote, MdPause, MdPauseCircleFilled, MdPauseCircleOutline, MdPlayArrow, MdPlayCircleFilled, MdPlayCircleOutline, MdPlaylistAdd, MdPlaylistAddCheck, MdPlaylistPlay, MdQueue, MdQueueMusic, MdQueuePlayNext, MdRadio, MdRecentActors, MdRemoveFromQueue, MdRepeat, MdRepeatOne, MdReplay10, MdReplay, MdReplay30, MdReplay5, MdShuffle, MdSkipNext, MdSkipPrevious, MdSlowMotionVideo, MdSnooze, MdSortByAlpha, MdStop, MdSubscriptions, MdSubtitles, MdSurroundSound, MdVideoCall, MdVideoLabel, MdVideoLibrary, MdVideocam, MdVideocamOff, MdVolumeDown, MdVolumeMute, MdVolumeOff, MdVolumeUp, MdWeb, MdWebAsset, MdBusiness, MdCall, MdCallEnd, MdCallMade, MdCallMerge, MdCallMissed, MdCallMissedOutgoing, MdCallReceived, MdCallSplit, MdChat, MdChatBubble, MdChatBubbleOutline, MdClearAll, MdComment, MdContactMail, MdContactPhone, MdContacts, MdDialerSip, MdDialpad, MdEmail, MdForum, MdImportContacts, MdImportExport, MdInvertColorsOff, MdLiveHelp, MdLocationOff, MdLocationOn, MdMailOutline, MdMessage, MdNoSim, MdPhone, MdPhonelinkErase, MdPhonelinkLock, MdPhonelinkRing, MdPhonelinkSetup, MdPortableWifiOff, MdPresentToAll, MdRingVolume, MdRssFeed, MdScreenShare, MdSpeakerPhone, MdStayCurrentLandscape, MdStayCurrentPortrait, MdStayPrimaryLandscape, MdStayPrimaryPortrait, MdStopScreenShare, MdSwapCalls, MdTextsms, MdVoicemail, MdVpnKey, MdAdd, MdAddBox, MdAddCircle, MdAddCircleOutline, MdArchive, MdBackspace, MdBlock, MdClear, MdContentCopy, MdContentCut, MdContentPaste, MdCreate, MdDeleteSweep, MdDrafts, MdFilterList, MdFlag, MdFontDownload, MdForward, MdGesture, MdInbox, MdLink, MdLowPriority, MdMail, MdMarkunread, MdMoveToInbox, MdNextWeek, MdRedo, MdRemove, MdRemoveCircle, MdRemoveCircleOutline, MdReply, MdReplyAll, MdReport, MdSave, MdSelectAll, MdSend, MdSort, MdTextFormat, MdUnarchive, MdUndo, MdWeekend, MdAccessAlarm, MdAccessAlarms, MdAccessTime, MdAddAlarm, MdAirplanemodeActive, MdAirplanemodeInactive, MdBattery20, MdBattery30, MdBattery50, MdBattery60, MdBattery80, MdBattery90, MdBatteryAlert, MdBatteryCharging20, MdBatteryCharging30, MdBatteryCharging50, MdBatteryCharging60, MdBatteryCharging80, MdBatteryCharging90, MdBatteryChargingFull, MdBatteryFull, MdBatteryStd, MdBatteryUnknown, MdBluetooth, MdBluetoothConnected, MdBluetoothDisabled, MdBluetoothSearching, MdBrightnessAuto, MdBrightnessHigh, MdBrightnessLow, MdBrightnessMedium, MdDataUsage, MdDeveloperMode, MdDevices, MdDvr, MdGpsFixed, MdGpsNotFixed, MdGpsOff, MdGraphicEq, MdLocationDisabled, MdLocationSearching, MdNetworkCell, MdNetworkWifi, MdNfc, MdScreenLockLandscape, MdScreenLockPortrait, MdScreenLockRotation, MdScreenRotation, MdSdStorage, MdSettingsSystemDaydream, MdSignalCellular0Bar, MdSignalCellular1Bar, MdSignalCellular2Bar, MdSignalCellular3Bar, MdSignalCellular4Bar, MdSignalCellularConnectedNoInternet0Bar, MdSignalCellularConnectedNoInternet1Bar, MdSignalCellularConnectedNoInternet2Bar, MdSignalCellularConnectedNoInternet3Bar, MdSignalCellularConnectedNoInternet4Bar, MdSignalCellularNoSim, MdSignalCellularNull, MdSignalCellularOff, MdSignalWifi0Bar, MdSignalWifi1Bar, MdSignalWifi1BarLock, MdSignalWifi2Bar, MdSignalWifi2BarLock, MdSignalWifi3Bar, MdSignalWifi3BarLock, MdSignalWifi4Bar, MdSignalWifi4BarLock, MdSignalWifiOff, MdStorage, MdUsb, MdWallpaper, MdWidgets, MdWifiLock, MdWifiTethering, MdAttachFile, MdAttachMoney, MdBorderAll, MdBorderBottom, MdBorderClear, MdBorderColor, MdBorderHorizontal, MdBorderInner, MdBorderLeft, MdBorderOuter, MdBorderRight, MdBorderStyle, MdBorderTop, MdBorderVertical, MdBubbleChart, MdDragHandle, MdFormatAlignCenter, MdFormatAlignJustify, MdFormatAlignLeft, MdFormatAlignRight, MdFormatBold, MdFormatClear, MdFormatColorFill, MdFormatColorReset, MdFormatColorText, MdFormatIndentDecrease, MdFormatIndentIncrease, MdFormatItalic, MdFormatLineSpacing, MdFormatListBulleted, MdFormatListNumbered, MdFormatPaint, MdFormatQuote, MdFormatShapes, MdFormatSize, MdFormatStrikethrough, MdFormatTextdirectionLToR, MdFormatTextdirectionRToL, MdFormatUnderlined, MdFunctions, MdHighlight, MdInsertChart, MdInsertComment, MdInsertDriveFile, MdInsertEmoticon, MdInsertInvitation, MdInsertLink, MdInsertPhoto, MdLinearScale, MdMergeType, MdModeComment, MdModeEdit, MdMonetizationOn, MdMoneyOff, MdMultilineChart, MdPieChart, MdPieChartOutlined, MdPublish, MdShortText, MdShowChart, MdSpaceBar, MdStrikethroughS, MdTextFields, MdTitle, MdVerticalAlignBottom, MdVerticalAlignCenter, MdVerticalAlignTop, MdWrapText, MdAttachment, MdCloud, MdCloudCircle, MdCloudDone, MdCloudDownload, MdCloudOff, MdCloudQueue, MdCloudUpload, MdCreateNewFolder, MdFileDownload, MdFileUpload, MdFolder, MdFolderOpen, MdFolderShared, MdCast, MdCastConnected, MdComputer, MdDesktopMac, MdDesktopWindows, MdDeveloperBoard, MdDeviceHub, MdDevicesOther, MdDock, MdGamepad, MdHeadset, MdHeadsetMic, MdKeyboard, MdKeyboardArrowDown, MdKeyboardArrowLeft, MdKeyboardArrowRight, MdKeyboardArrowUp, MdKeyboardBackspace, MdKeyboardCapslock, MdKeyboardHide, MdKeyboardReturn, MdKeyboardTab, MdKeyboardVoice, MdLaptop, MdLaptopChromebook, MdLaptopMac, MdLaptopWindows, MdMemory, MdMouse, MdPhoneAndroid, MdPhoneIphone, MdPhonelink, MdPhonelinkOff, MdPowerInput, MdRouter, MdScanner, MdSecurity, MdSimCard, MdSmartphone, MdSpeaker, MdSpeakerGroup, MdTablet, MdTabletAndroid, MdTabletMac, MdToys, MdTv, MdVideogameAsset, MdWatch, MdAddAPhoto, MdAddToPhotos, MdAdjust, MdAssistant, MdAssistantPhoto, MdAudiotrack, MdBlurCircular, MdBlurLinear, MdBlurOff, MdBlurOn, MdBrightness1, MdBrightness2, MdBrightness3, MdBrightness4, MdBrightness5, MdBrightness6, MdBrightness7, MdBrokenImage, MdBrush, MdBurstMode, MdCamera, MdCameraAlt, MdCameraFront, MdCameraRear, MdCameraRoll, MdCenterFocusStrong, MdCenterFocusWeak, MdCollections, MdCollectionsBookmark, MdColorLens, MdColorize, MdCompare, MdControlPoint, MdControlPointDuplicate, MdCrop169, MdCrop, MdCrop32, MdCrop54, MdCrop75, MdCropDin, MdCropFree, MdCropLandscape, MdCropOriginal, MdCropPortrait, MdCropRotate, MdCropSquare, MdDehaze, MdDetails, MdEdit, MdExposure, MdExposureNeg1, MdExposureNeg2, MdExposurePlus1, MdExposurePlus2, MdExposureZero, MdFilter1, MdFilter2, MdFilter, MdFilter3, MdFilter4, MdFilter5, MdFilter6, MdFilter7, MdFilter8, MdFilter9, MdFilter9Plus, MdFilterBAndW, MdFilterCenterFocus, MdFilterDrama, MdFilterFrames, MdFilterHdr, MdFilterNone, MdFilterTiltShift, MdFilterVintage, MdFlare, MdFlashAuto, MdFlashOff, MdFlashOn, MdFlip, MdGradient, MdGrain, MdGridOff, MdGridOn, MdHdrOff, MdHdrOn, MdHdrStrong, MdHdrWeak, MdHealing, MdImage, MdImageAspectRatio, MdIso, MdLandscape, MdLeakAdd, MdLeakRemove, MdLens, MdLinkedCamera, MdLooks, MdLooks3, MdLooks4, MdLooks5, MdLooks6, MdLooksOne, MdLooksTwo, MdLoupe, MdMonochromePhotos, MdMovieCreation, MdMovieFilter, MdMusicNote, MdNature, MdNaturePeople, MdNavigateBefore, MdNavigateNext, MdPalette, MdPanorama, MdPanoramaFishEye, MdPanoramaHorizontal, MdPanoramaVertical, MdPanoramaWideAngle, MdPhoto, MdPhotoAlbum, MdPhotoCamera, MdPhotoFilter, MdPhotoLibrary, MdPhotoSizeSelectActual, MdPhotoSizeSelectLarge, MdPhotoSizeSelectSmall, MdPictureAsPdf, MdPortrait, MdRemoveRedEye, MdRotate90DegreesCcw, MdRotateLeft, MdRotateRight, MdSlideshow, MdStraighten, MdStyle, MdSwitchCamera, MdSwitchVideo, MdTagFaces, MdTexture, MdTimelapse, MdTimer10, MdTimer, MdTimer3, MdTimerOff, MdTonality, MdTransform, MdTune, MdViewComfy, MdViewCompact, MdVignette, MdWbAuto, MdWbCloudy, MdWbIncandescent, MdWbIridescent, MdWbSunny, MdAddLocation, MdBeenhere, MdDirections, MdDirectionsBike, MdDirectionsBoat, MdDirectionsBus, MdDirectionsCar, MdDirectionsRailway, MdDirectionsRun, MdDirectionsSubway, MdDirectionsTransit, MdDirectionsWalk, MdEditLocation, MdEvStation, MdFlight, MdHotel, MdLayers, MdLayersClear, MdLocalActivity, MdLocalAirport, MdLocalAtm, MdLocalBar, MdLocalCafe, MdLocalCarWash, MdLocalConvenienceStore, MdLocalDining, MdLocalDrink, MdLocalFlorist, MdLocalGasStation, MdLocalGroceryStore, MdLocalHospital, MdLocalHotel, MdLocalLaundryService, MdLocalLibrary, MdLocalMall, MdLocalMovies, MdLocalOffer, MdLocalParking, MdLocalPharmacy, MdLocalPhone, MdLocalPizza, MdLocalPlay, MdLocalPostOffice, MdLocalPrintshop, MdLocalSee, MdLocalShipping, MdLocalTaxi, MdMap, MdMyLocation, MdNavigation, MdNearMe, MdPersonPin, MdPersonPinCircle, MdPinDrop, MdPlace, MdRateReview, MdRestaurant, MdRestaurantMenu, MdSatellite, MdStoreMallDirectory, MdStreetview, MdSubway, MdTerrain, MdTraffic, MdTrain, MdTram, MdTransferWithinAStation, MdZoomOutMap, MdApps, MdArrowBack, MdArrowDownward, MdArrowDropDown, MdArrowDropDownCircle, MdArrowDropUp, MdArrowForward, MdArrowUpward, MdCancel, MdCheck, MdChevronLeft, MdChevronRight, MdClose, MdExpandLess, MdExpandMore, MdFirstPage, MdFullscreen, MdFullscreenExit, MdLastPage, MdMenu, MdMoreHoriz, MdMoreVert, MdRefresh, MdSubdirectoryArrowLeft, MdSubdirectoryArrowRight, MdUnfoldLess, MdUnfoldMore, MdAdb, MdAirlineSeatFlat, MdAirlineSeatFlatAngled, MdAirlineSeatIndividualSuite, MdAirlineSeatLegroomExtra, MdAirlineSeatLegroomNormal, MdAirlineSeatLegroomReduced, MdAirlineSeatReclineExtra, MdAirlineSeatReclineNormal, MdBluetoothAudio, MdConfirmationNumber, MdDiscFull, MdDoNotDisturb, MdDoNotDisturbAlt, MdDoNotDisturbOff, MdDoNotDisturbOn, MdDriveEta, MdEnhancedEncryption, MdEventAvailable, MdEventBusy, MdEventNote, MdFolderSpecial, MdLiveTv, MdMms, MdMore, MdNetworkCheck, MdNetworkLocked, MdNoEncryption, MdOndemandVideo, MdPersonalVideo, MdPhoneBluetoothSpeaker, MdPhoneForwarded, MdPhoneInTalk, MdPhoneLocked, MdPhoneMissed, MdPhonePaused, MdPower, MdPriorityHigh, MdRvHookup, MdSdCard, MdSimCardAlert, MdSms, MdSmsFailed, MdSync, MdSyncDisabled, MdSyncProblem, MdSystemUpdate, MdTapAndPlay, MdTimeToLeave, MdVibration, MdVoiceChat, MdVpnLock, MdWc, MdWifi, MdAcUnit, MdAirportShuttle, MdAllInclusive, MdBeachAccess, MdBusinessCenter, MdCasino, MdChildCare, MdChildFriendly, MdFitnessCenter, MdFreeBreakfast, MdGolfCourse, MdHotTub, MdKitchen, MdPool, MdRoomService, MdSmokeFree, MdSmokingRooms, MdSpa, MdCake, MdDomain, MdGroup, MdGroupAdd, MdLocationCity, MdMood, MdMoodBad, MdNotifications, MdNotificationsActive, MdNotificationsNone, MdNotificationsOff, MdNotificationsPaused, MdPages, MdPartyMode, MdPeople, MdPeopleOutline, MdPerson, MdPersonAdd, MdPersonOutline, MdPlusOne, MdPoll, MdPublic, MdSchool, MdSentimentDissatisfied, MdSentimentNeutral, MdSentimentSatisfied, MdSentimentVeryDissatisfied, MdSentimentVerySatisfied, MdShare, MdWhatshot, MdCheckBox, MdCheckBoxOutlineBlank, MdIndeterminateCheckBox, MdRadioButtonChecked, MdRadioButtonUnchecked, MdStar, MdStarBorder, MdStarHalf */
 
-/*! exports provided: Message, MessageCommerce, MessageLivestream, MessageSimple, MessageTeam, MessageRepliesCountButton */
+/*! exports provided: Message, MessageCommerce, MessageLivestream, MessageSimple, MessageTeam, MessageRepliesCountButton, MessageOptions, MessageText, handleActionWarning, useActionHandler, useDeleteHandler, useEditHandler, missingUseFlagHandlerParameterWarning, useFlagHandler, useMentionsHandler, useMentionsUIHandler, missingUseMuteHandlerParamsWarning, useMuteHandler, useOpenThreadHandler, reactionHandlerWarning, useReactionHandler, useReactionClick, useRetryHandler, useUserHandler, useUserRole, validateAndGetMessage, isUserMuted, MESSAGE_ACTIONS, getMessageActions, areMessagePropsEqual, shouldMessageComponentUpdate, messageHasReactions, messageHasAttachments, getImages, getNonImageAttachments, MessagePropTypes */
 
 /*! exports provided: MessageActions */
 
 /*! exports provided: MessageActionsBox, MessageActions */
 
-/*! exports provided: MessageInput, MessageInputFlat, MessageInputLarge, MessageInputSmall, EditMessageForm, SendButton */
+/*! exports provided: MessageInput, MessageInputFlat, MessageInputLarge, MessageInputSmall, EditMessageForm, SendButton, useMessageInput */
 
 /*! exports provided: MessageList, MessageNotification */
-
-/*! exports provided: MessageOptions */
-
-/*! exports provided: MessageText */
 
 /*! exports provided: Modal */
 
@@ -176,7 +170,13 @@
 
 /*! exports provided: RemoveScrollBar, zeroRightClassName, fullWidthClassName, noScrollbarsClassName, getGapWidth */
 
+<<<<<<< HEAD:docs/build/bundle.e6a8bfd1.js.LICENSE.txt
 /*! exports provided: SUPPORTED_VIDEO_FORMATS, isImageAttachment, isMediaAttachment, isAudioAttachment, isFileAttachment, renderAttachmentWithinContainer, renderImage, renderAttachmentActions, renderCard, renderFile, renderAudio, renderMedia, default */
+=======
+/*! exports provided: ReplyIcon, DeliveredCheckIcon, ReactionIcon, ThreadIcon, ErrorIcon */
+
+/*! exports provided: SUPPORTED_VIDEO_FORMATS, isImageAttachment, isMediaAttachment, isAudioAttachment, isFileAttachment, renderAttachmentWithinContainer, renderAttachmentActions, renderImage, renderCard, renderFile, renderAudio, renderMedia, default */
+>>>>>>> upstream/master:docs/build/bundle.16aef901.js.LICENSE.txt
 
 /*! exports provided: SafeAnchor */
 
@@ -234,6 +234,8 @@
 
 /*! exports provided: categories, search */
 
+/*! exports provided: channelReducer, initialState */
+
 /*! exports provided: client, channel, channelContext, translationContext, channels, message, thread, threadMessages, messages, users, MessageMock */
 
 /*! exports provided: columns, default */
@@ -270,6 +272,8 @@
 
 /*! exports provided: defaultScrollToItem */
 
+/*! exports provided: defaultTimestampFormat, notValidDateWarning, noParsingFunctionWarning, default */
+
 /*! exports provided: deferAction, inlineProp */
 
 /*! exports provided: effectCar */
@@ -280,7 +284,7 @@
 
 /*! exports provided: emojiIndex, NimbleEmojiIndex, store, frequently, getEmojiDataFromNative, Picker, NimblePicker, Emoji, NimbleEmoji, Category */
 
-/*! exports provided: emojiSetDef, commonEmoji, defaultMinimalEmojis, emojiData, isOnlyEmojis, isPromise, byDate, formatArray, renderText, generateRandomId, smartRender, filterEmoji, getReadByTooltipText */
+/*! exports provided: emojiSetDef, commonEmoji, defaultMinimalEmojis, emojiData, isOnlyEmojis, isPromise, byDate, formatArray, truncate, renderText, generateRandomId, smartRender, filterEmoji, getReadByTooltipText */
 
 /*! exports provided: enTranslations, nlTranslations, ruTranslations, trTranslations, frTranslations, hiTranslations, itTranslations */
 
@@ -308,7 +312,7 @@
 
 /*! exports provided: handleActionWarning, useActionHandler */
 
-/*! exports provided: handleActionWarning, useActionHandler, useDeleteHandler, useEditHandler, useFlagHandler, useMentionsHandler, useMuteHandler, useOpenThreadHandler, reactionHandlerWarning, useReactionHandler, useReactionClick, useRetryHandler, useUserHandler, useUserRole */
+/*! exports provided: handleActionWarning, useActionHandler, useDeleteHandler, useEditHandler, missingUseFlagHandlerParameterWarning, useFlagHandler, useMentionsHandler, useMentionsUIHandler, missingUseMuteHandlerParamsWarning, useMuteHandler, useOpenThreadHandler, reactionHandlerWarning, useReactionHandler, useReactionClick, useRetryHandler, useUserHandler, useUserRole */
 
 /*! exports provided: hasInHash, getHash, getHashAsArray, getParameterByName */
 
@@ -328,8 +332,15 @@
 
 /*! exports provided: mergeRefs */
 
+/*! exports provided: missingUseFlagHandlerParameterWarning, useFlagHandler */
+
+<<<<<<< HEAD:docs/build/bundle.e6a8bfd1.js.LICENSE.txt
+=======
+/*! exports provided: missingUseMuteHandlerParamsWarning, useMuteHandler */
+
 /*! exports provided: moveChannelUp, getChannel, MAX_QUERY_CHANNELS_LIMIT */
 
+>>>>>>> upstream/master:docs/build/bundle.16aef901.js.LICENSE.txt
 /*! exports provided: nonPassive */
 
 /*! exports provided: pickFocusable, default */
@@ -400,9 +411,15 @@
 
 /*! exports provided: useChannelDeletedListener */
 
+/*! exports provided: useChannelEditMessageHandler, useChannelMentionsHandler */
+
+/*! exports provided: useChannelHiddenListener */
+
 /*! exports provided: useChannelTruncatedListener */
 
 /*! exports provided: useChannelUpdatedListener */
+
+/*! exports provided: useChannelVisibleListener */
 
 /*! exports provided: useConnectionRecoveredListener */
 
@@ -410,19 +427,23 @@
 
 /*! exports provided: useEditHandler */
 
-/*! exports provided: useFlagHandler */
+/*! exports provided: useFocusInside, default */
 
+<<<<<<< HEAD:docs/build/bundle.e6a8bfd1.js.LICENSE.txt
 /*! exports provided: useFocusInside, default */
 
 /*! exports provided: useMentionsHandler */
+=======
+/*! exports provided: useMentionsHandler, useMentionsUIHandler */
+>>>>>>> upstream/master:docs/build/bundle.16aef901.js.LICENSE.txt
 
 /*! exports provided: useMergeRefs */
+
+/*! exports provided: useMessageInput */
 
 /*! exports provided: useMessageNewListener */
 
 /*! exports provided: useMobileNavigation */
-
-/*! exports provided: useMuteHandler */
 
 /*! exports provided: useNotificationAddedToChannelListener */
 
@@ -496,10 +517,13 @@
   !*** ./src/i18n/tr.json ***!
   \**************************/
 
+<<<<<<< HEAD:docs/build/bundle.e6a8bfd1.js.LICENSE.txt
 /*!**************************!*\
   !*** ./styleguidist.css ***!
   \**************************/
 
+=======
+>>>>>>> upstream/master:docs/build/bundle.16aef901.js.LICENSE.txt
 /*!***************************!*\
   !*** ./src/i18n/index.js ***!
   \***************************/
@@ -514,10 +538,13 @@
 
 /*!********************************!*\
   !*** ./src/i18n/Streami18n.js ***!
+<<<<<<< HEAD:docs/build/bundle.e6a8bfd1.js.LICENSE.txt
   \********************************/
 
 /*!********************************!*\
   !*** ./util.inspect (ignored) ***!
+=======
+>>>>>>> upstream/master:docs/build/bundle.16aef901.js.LICENSE.txt
   \********************************/
 
 /*!*********************************!*\
@@ -629,14 +656,6 @@
   \**************************************/
 
 /*!**************************************!*\
-  !*** ./node_modules/is-map/index.js ***!
-  \**************************************/
-
-/*!**************************************!*\
-  !*** ./node_modules/is-set/index.js ***!
-  \**************************************/
-
-/*!**************************************!*\
   !*** ./node_modules/lodash/_Hash.js ***!
   \**************************************/
 
@@ -666,10 +685,6 @@
 
 /*!***************************************!*\
   !*** ./node_modules/events/events.js ***!
-  \***************************************/
-
-/*!***************************************!*\
-  !*** ./node_modules/foreach/index.js ***!
   \***************************************/
 
 /*!***************************************!*\
@@ -740,6 +755,10 @@
   !*** ./src/context/ChannelContext.js ***!
   \***************************************/
 
+/*!***************************************!*\
+  !*** ./styleguidist/styleguidist.css ***!
+  \***************************************/
+
 /*!****************************************!*\
   !*** ./node_modules/glam/lib/index.js ***!
   \****************************************/
@@ -750,10 +769,6 @@
 
 /*!****************************************!*\
   !*** ./node_modules/glam/lib/sheet.js ***!
-  \****************************************/
-
-/*!****************************************!*\
-  !*** ./node_modules/is-regex/index.js ***!
   \****************************************/
 
 /*!****************************************!*\
@@ -774,10 +789,6 @@
 
 /*!****************************************!*\
   !*** ./node_modules/lodash/memoize.js ***!
-  \****************************************/
-
-/*!****************************************!*\
-  !*** ./node_modules/object-is/shim.js ***!
   \****************************************/
 
 /*!****************************************!*\
@@ -877,19 +888,7 @@
   \*****************************************/
 
 /*!*****************************************!*\
-  !*** ./node_modules/is-bigint/index.js ***!
-  \*****************************************/
-
-/*!*****************************************!*\
   !*** ./node_modules/is-buffer/index.js ***!
-  \*****************************************/
-
-/*!*****************************************!*\
-  !*** ./node_modules/is-string/index.js ***!
-  \*****************************************/
-
-/*!*****************************************!*\
-  !*** ./node_modules/is-symbol/index.js ***!
   \*****************************************/
 
 /*!*****************************************!*\
@@ -969,19 +968,11 @@
   \*****************************************/
 
 /*!*****************************************!*\
-  !*** ./node_modules/lodash/isRegExp.js ***!
-  \*****************************************/
-
-/*!*****************************************!*\
   !*** ./node_modules/lodash/isSymbol.js ***!
   \*****************************************/
 
 /*!*****************************************!*\
   !*** ./node_modules/lodash/property.js ***!
-  \*****************************************/
-
-/*!*****************************************!*\
-  !*** ./node_modules/lodash/throttle.js ***!
   \*****************************************/
 
 /*!*****************************************!*\
@@ -994,14 +985,6 @@
 
 /*!*****************************************!*\
   !*** ./node_modules/lodash/toString.js ***!
-  \*****************************************/
-
-/*!*****************************************!*\
-  !*** ./node_modules/lodash/truncate.js ***!
-  \*****************************************/
-
-/*!*****************************************!*\
-  !*** ./node_modules/object-is/index.js ***!
   \*****************************************/
 
 /*!*****************************************!*\
@@ -1045,6 +1028,10 @@
   \*****************************************/
 
 /*!*****************************************!*\
+  !*** ./src/components/Message/icons.js ***!
+  \*****************************************/
+
+/*!*****************************************!*\
   !*** ./src/components/Message/index.js ***!
   \*****************************************/
 
@@ -1069,10 +1056,6 @@
   \******************************************/
 
 /*!******************************************!*\
-  !*** ./node_modules/deep-equal/index.js ***!
-  \******************************************/
-
-/*!******************************************!*\
   !*** ./node_modules/es6-promise/auto.js ***!
   \******************************************/
 
@@ -1090,14 +1073,6 @@
 
 /*!******************************************!*\
   !*** ./node_modules/is-decimal/index.js ***!
-  \******************************************/
-
-/*!******************************************!*\
-  !*** ./node_modules/is-weakmap/index.js ***!
-  \******************************************/
-
-/*!******************************************!*\
-  !*** ./node_modules/is-weakset/index.js ***!
   \******************************************/
 
 /*!******************************************!*\
@@ -1253,14 +1228,6 @@
   \*******************************************/
 
 /*!*******************************************!*\
-  !*** ./node_modules/has-symbols/index.js ***!
-  \*******************************************/
-
-/*!*******************************************!*\
-  !*** ./node_modules/has-symbols/shams.js ***!
-  \*******************************************/
-
-/*!*******************************************!*\
   !*** ./node_modules/hash-sum/hash-sum.js ***!
   \*******************************************/
 
@@ -1281,10 +1248,6 @@
   \*******************************************/
 
 /*!*******************************************!*\
-  !*** ./node_modules/lodash/_asciiSize.js ***!
-  \*******************************************/
-
-/*!*******************************************!*\
   !*** ./node_modules/lodash/_baseHasIn.js ***!
   \*******************************************/
 
@@ -1293,19 +1256,11 @@
   \*******************************************/
 
 /*!*******************************************!*\
-  !*** ./node_modules/lodash/_baseSlice.js ***!
-  \*******************************************/
-
-/*!*******************************************!*\
   !*** ./node_modules/lodash/_baseTimes.js ***!
   \*******************************************/
 
 /*!*******************************************!*\
   !*** ./node_modules/lodash/_baseUnary.js ***!
-  \*******************************************/
-
-/*!*******************************************!*\
-  !*** ./node_modules/lodash/_castSlice.js ***!
   \*******************************************/
 
 /*!*******************************************!*\
@@ -1337,10 +1292,6 @@
   \*******************************************/
 
 /*!*******************************************!*\
-  !*** ./node_modules/object-keys/index.js ***!
-  \*******************************************/
-
-/*!*******************************************!*\
   !*** ./node_modules/ramda/src/forEach.js ***!
   \*******************************************/
 
@@ -1369,10 +1320,6 @@
   \*******************************************/
 
 /*!*******************************************!*\
-  !*** ./src/components/Attachment/File.js ***!
-  \*******************************************/
-
-/*!*******************************************!*\
   !*** ./src/components/Channel/Channel.js ***!
   \*******************************************/
 
@@ -1397,10 +1344,6 @@
   \*******************************************/
 
 /*!********************************************!*\
-  !*** ./node_modules/array-filter/index.js ***!
-  \********************************************/
-
-/*!********************************************!*\
   !*** ./node_modules/axios/lib/defaults.js ***!
   \********************************************/
 
@@ -1422,10 +1365,6 @@
 
 /*!********************************************!*\
   !*** ./node_modules/fbjs/lib/hyphenate.js ***!
-  \********************************************/
-
-/*!********************************************!*\
-  !*** ./node_modules/is-arguments/index.js ***!
   \********************************************/
 
 /*!********************************************!*\
@@ -1485,10 +1424,6 @@
   \********************************************/
 
 /*!********************************************!*\
-  !*** ./node_modules/lodash/_hasUnicode.js ***!
-  \********************************************/
-
-/*!********************************************!*\
   !*** ./node_modules/lodash/_hashDelete.js ***!
   \********************************************/
 
@@ -1509,23 +1444,11 @@
   \********************************************/
 
 /*!********************************************!*\
-  !*** ./node_modules/lodash/_stringSize.js ***!
-  \********************************************/
-
-/*!********************************************!*\
   !*** ./node_modules/lodash/isArguments.js ***!
   \********************************************/
 
 /*!********************************************!*\
   !*** ./node_modules/lodash/isArrayLike.js ***!
-  \********************************************/
-
-/*!********************************************!*\
-  !*** ./node_modules/object-is/polyfill.js ***!
-  \********************************************/
-
-/*!********************************************!*\
-  !*** ./node_modules/object.assign/shim.js ***!
   \********************************************/
 
 /*!********************************************!*\
@@ -1553,15 +1476,7 @@
   \********************************************/
 
 /*!********************************************!*\
-  !*** ./node_modules/side-channel/index.js ***!
-  \********************************************/
-
-/*!********************************************!*\
   !*** ./node_modules/state-toggle/index.js ***!
-  \********************************************/
-
-/*!********************************************!*\
-  !*** ./node_modules/visibilityjs/index.js ***!
   \********************************************/
 
 /*!********************************************!*\
@@ -1594,10 +1509,6 @@
 
 /*!*********************************************!*\
   !*** ./node_modules/entities/lib/encode.js ***!
-  \*********************************************/
-
-/*!*********************************************!*\
-  !*** ./node_modules/function-bind/index.js ***!
   \*********************************************/
 
 /*!*********************************************!*\
@@ -1669,10 +1580,6 @@
   \*********************************************/
 
 /*!*********************************************!*\
-  !*** ./node_modules/lodash/_unicodeSize.js ***!
-  \*********************************************/
-
-/*!*********************************************!*\
   !*** ./node_modules/lodash/escapeRegExp.js ***!
   \*********************************************/
 
@@ -1686,10 +1593,6 @@
 
 /*!*********************************************!*\
   !*** ./node_modules/object-assign/index.js ***!
-  \*********************************************/
-
-/*!*********************************************!*\
-  !*** ./node_modules/object.assign/index.js ***!
   \*********************************************/
 
 /*!*********************************************!*\
@@ -1745,19 +1648,7 @@
   \**********************************************/
 
 /*!**********************************************!*\
-  !*** ./node_modules/is-date-object/index.js ***!
-  \**********************************************/
-
-/*!**********************************************!*\
   !*** ./node_modules/is-hexadecimal/index.js ***!
-  \**********************************************/
-
-/*!**********************************************!*\
-  !*** ./node_modules/is-typed-array/index.js ***!
-  \**********************************************/
-
-/*!**********************************************!*\
-  !*** ./node_modules/lodash/_asciiToArray.js ***!
   \**********************************************/
 
 /*!**********************************************!*\
@@ -1766,10 +1657,6 @@
 
 /*!**********************************************!*\
   !*** ./node_modules/lodash/_baseIsNative.js ***!
-  \**********************************************/
-
-/*!**********************************************!*\
-  !*** ./node_modules/lodash/_baseIsRegExp.js ***!
   \**********************************************/
 
 /*!**********************************************!*\
@@ -1826,10 +1713,6 @@
 
 /*!**********************************************!*\
   !*** ./node_modules/lodash/toPlainObject.js ***!
-  \**********************************************/
-
-/*!**********************************************!*\
-  !*** ./node_modules/object-inspect/index.js ***!
   \**********************************************/
 
 /*!**********************************************!*\
@@ -1897,10 +1780,6 @@
   \***********************************************/
 
 /*!***********************************************!*\
-  !*** ./node_modules/es-get-iterator/index.js ***!
-  \***********************************************/
-
-/*!***********************************************!*\
   !*** ./node_modules/form-data/lib/browser.js ***!
   \***********************************************/
 
@@ -1925,7 +1804,11 @@
   \***********************************************/
 
 /*!***********************************************!*\
+<<<<<<< HEAD:docs/build/bundle.e6a8bfd1.js.LICENSE.txt
   !*** ./node_modules/lodash.truncate/index.js ***!
+=======
+  !*** ./node_modules/lodash.throttle/index.js ***!
+>>>>>>> upstream/master:docs/build/bundle.16aef901.js.LICENSE.txt
   \***********************************************/
 
 /*!***********************************************!*\
@@ -1957,10 +1840,6 @@
   \***********************************************/
 
 /*!***********************************************!*\
-  !*** ./node_modules/lodash/_stringToArray.js ***!
-  \***********************************************/
-
-/*!***********************************************!*\
   !*** ./node_modules/path-browserify/index.js ***!
   \***********************************************/
 
@@ -1982,6 +1861,10 @@
 
 /*!***********************************************!*\
   !*** ./node_modules/uuid/dist/rng-browser.js ***!
+  \***********************************************/
+
+/*!***********************************************!*\
+  !*** ./src/components/Channel/hooks/index.js ***!
   \***********************************************/
 
 /*!***********************************************!*\
@@ -2053,10 +1936,6 @@
   \************************************************/
 
 /*!************************************************!*\
-  !*** ./node_modules/is-number-object/index.js ***!
-  \************************************************/
-
-/*!************************************************!*\
   !*** ./node_modules/lodash.camelcase/index.js ***!
   \************************************************/
 
@@ -2093,15 +1972,11 @@
   \************************************************/
 
 /*!************************************************!*\
-  !*** ./node_modules/lodash/_unicodeToArray.js ***!
-  \************************************************/
-
-/*!************************************************!*\
   !*** ./node_modules/markdown-escapes/index.js ***!
   \************************************************/
 
 /*!************************************************!*\
-  !*** ./node_modules/object.assign/polyfill.js ***!
+  !*** ./node_modules/react-player/lib/index.js ***!
   \************************************************/
 
 /*!************************************************!*\
@@ -2125,7 +2000,7 @@
   \************************************************/
 
 /*!************************************************!*\
-  !*** ./node_modules/which-collection/index.js ***!
+  !*** ./src/components/Channel/channelState.js ***!
   \************************************************/
 
 /*!************************************************!*\
@@ -2161,10 +2036,6 @@
   \*************************************************/
 
 /*!*************************************************!*\
-  !*** ./node_modules/define-properties/index.js ***!
-  \*************************************************/
-
-/*!*************************************************!*\
   !*** ./node_modules/entities/lib/maps/xml.json ***!
   \*************************************************/
 
@@ -2182,10 +2053,6 @@
 
 /*!*************************************************!*\
   !*** ./node_modules/is-alphanumerical/index.js ***!
-  \*************************************************/
-
-/*!*************************************************!*\
-  !*** ./node_modules/is-boolean-object/index.js ***!
   \*************************************************/
 
 /*!*************************************************!*\
@@ -2221,10 +2088,6 @@
   \*************************************************/
 
 /*!*************************************************!*\
-  !*** ./node_modules/object-keys/isArguments.js ***!
-  \*************************************************/
-
-/*!*************************************************!*\
   !*** ./node_modules/ramda/src/internal/_has.js ***!
   \*************************************************/
 
@@ -2250,10 +2113,6 @@
 
 /*!*************************************************!*\
   !*** ./node_modules/remark-parse/lib/parser.js ***!
-  \*************************************************/
-
-/*!*************************************************!*\
-  !*** ./node_modules/which-typed-array/index.js ***!
   \*************************************************/
 
 /*!*************************************************!*\
@@ -2297,10 +2156,6 @@
   \**************************************************/
 
 /*!**************************************************!*\
-  !*** ./node_modules/es-abstract/GetIntrinsic.js ***!
-  \**************************************************/
-
-/*!**************************************************!*\
   !*** ./node_modules/html-to-react/lib/parser.js ***!
   \**************************************************/
 
@@ -2333,11 +2188,11 @@
   \**************************************************/
 
 /*!**************************************************!*\
-  !*** ./node_modules/object-is/implementation.js ***!
+  !*** ./node_modules/ramda/src/internal/_xmap.js ***!
   \**************************************************/
 
 /*!**************************************************!*\
-  !*** ./node_modules/ramda/src/internal/_xmap.js ***!
+  !*** ./node_modules/react-fast-compare/index.js ***!
   \**************************************************/
 
 /*!**************************************************!*\
@@ -2358,10 +2213,6 @@
 
 /*!**************************************************!*\
   !*** ./node_modules/react-player/lib/Preview.js ***!
-  \**************************************************/
-
-/*!**************************************************!*\
-  !*** ./node_modules/react-player/lib/preload.js ***!
   \**************************************************/
 
 /*!**************************************************!*\
@@ -2462,6 +2313,10 @@
 
 /*!***************************************************!*\
   !*** ./node_modules/react-icons/lib/esm/index.js ***!
+  \***************************************************/
+
+/*!***************************************************!*\
+  !*** ./node_modules/react-player/lib/patterns.js ***!
   \***************************************************/
 
 /*!***************************************************!*\
@@ -2597,10 +2452,6 @@
   \****************************************************/
 
 /*!****************************************************!*\
-  !*** ./node_modules/object-keys/implementation.js ***!
-  \****************************************************/
-
-/*!****************************************************!*\
   !*** ./node_modules/ramda/src/internal/_concat.js ***!
   \****************************************************/
 
@@ -2693,7 +2544,15 @@
   \****************************************************/
 
 /*!****************************************************!*\
+  !*** ./src/components/Message/MessageTimestamp.js ***!
+  \****************************************************/
+
+/*!****************************************************!*\
   !*** ./src/components/MessageInput/EmojiPicker.js ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./src/components/MessageInput/hooks/index.js ***!
   \****************************************************/
 
 /*!*****************************************************!*\
@@ -2777,10 +2636,6 @@
   \*****************************************************/
 
 /*!*****************************************************!*\
-  !*** ./node_modules/regexp.prototype.flags/shim.js ***!
-  \*****************************************************/
-
-/*!*****************************************************!*\
   !*** ./node_modules/remark-parse/lib/locate/tag.js ***!
   \*****************************************************/
 
@@ -2805,7 +2660,7 @@
   \*****************************************************/
 
 /*!*****************************************************!*\
-  !*** ./node_modules/which-boxed-primitive/index.js ***!
+  !*** ./src/components/Attachment/FileAttachment.js ***!
   \*****************************************************/
 
 /*!*****************************************************!*\
@@ -2835,10 +2690,6 @@
 /*!*****************************************************!*\
   !*** ./src/components/MessageInput/MessageInput.js ***!
   \*****************************************************/
-
-/*!******************************************************!*\
-  !*** ./node_modules/available-typed-arrays/index.js ***!
-  \******************************************************/
 
 /*!******************************************************!*\
   !*** ./node_modules/axios/lib/cancel/CancelToken.js ***!
@@ -2881,23 +2732,11 @@
   \******************************************************/
 
 /*!******************************************************!*\
-  !*** ./node_modules/es-abstract/helpers/callBind.js ***!
-  \******************************************************/
-
-/*!******************************************************!*\
   !*** ./node_modules/es6-promise/dist/es6-promise.js ***!
   \******************************************************/
 
 /*!******************************************************!*\
   !*** ./node_modules/focus-lock/dist/es2015/index.js ***!
-  \******************************************************/
-
-/*!******************************************************!*\
-  !*** ./node_modules/function-bind/implementation.js ***!
-  \******************************************************/
-
-/*!******************************************************!*\
-  !*** ./node_modules/object.assign/implementation.js ***!
   \******************************************************/
 
 /*!******************************************************!*\
@@ -2954,10 +2793,6 @@
 
 /*!******************************************************!*\
   !*** ./node_modules/react-transition-group/index.js ***!
-  \******************************************************/
-
-/*!******************************************************!*\
-  !*** ./node_modules/regexp.prototype.flags/index.js ***!
   \******************************************************/
 
 /*!******************************************************!*\
@@ -3073,10 +2908,6 @@
   \*******************************************************/
 
 /*!*******************************************************!*\
-  !*** ./node_modules/es-abstract/helpers/callBound.js ***!
-  \*******************************************************/
-
-/*!*******************************************************!*\
   !*** ./node_modules/html-dom-parser/lib/constants.js ***!
   \*******************************************************/
 
@@ -3102,10 +2933,6 @@
 
 /*!*******************************************************!*\
   !*** ./node_modules/react-motion/lib/react-motion.js ***!
-  \*******************************************************/
-
-/*!*******************************************************!*\
-  !*** ./node_modules/react-player/lib/singlePlayer.js ***!
   \*******************************************************/
 
 /*!*******************************************************!*\
@@ -3277,6 +3104,10 @@
   \********************************************************/
 
 /*!********************************************************!*\
+  !*** ./node_modules/use-latest/dist/use-latest.esm.js ***!
+  \********************************************************/
+
+/*!********************************************************!*\
   !*** ./node_modules/use-sidecar/dist/es2015/config.js ***!
   \********************************************************/
 
@@ -3306,6 +3137,14 @@
 
 /*!********************************************************!*\
   !*** ./src/components/MessageInput/EditMessageForm.js ***!
+  \********************************************************/
+
+/*!********************************************************!*\
+  !*** ./src/components/MessageList/ConnectionStatus.js ***!
+  \********************************************************/
+
+/*!********************************************************!*\
+  !*** ./src/components/MessageList/MessageListInner.js ***!
   \********************************************************/
 
 /*!*********************************************************!*\
@@ -3414,10 +3253,6 @@
 
 /*!*********************************************************!*\
   !*** ./node_modules/react-player/lib/players/Wistia.js ***!
-  \*********************************************************/
-
-/*!*********************************************************!*\
-  !*** ./node_modules/regexp.prototype.flags/polyfill.js ***!
   \*********************************************************/
 
 /*!*********************************************************!*\
@@ -3545,6 +3380,10 @@
   \**********************************************************/
 
 /*!**********************************************************!*\
+  !*** ./node_modules/memoize-one/dist/memoize-one.esm.js ***!
+  \**********************************************************/
+
+/*!**********************************************************!*\
   !*** ./node_modules/ramda/src/internal/_dispatchable.js ***!
   \**********************************************************/
 
@@ -3562,6 +3401,10 @@
 
 /*!**********************************************************!*\
   !*** ./node_modules/react-motion/lib/StaggeredMotion.js ***!
+  \**********************************************************/
+
+/*!**********************************************************!*\
+  !*** ./node_modules/react-player/lib/players/Vidyard.js ***!
   \**********************************************************/
 
 /*!**********************************************************!*\
@@ -3586,10 +3429,6 @@
 
 /*!**********************************************************!*\
   !*** ./node_modules/unist-util-remove-position/index.js ***!
-  \**********************************************************/
-
-/*!**********************************************************!*\
-  !*** ./node_modules/visibilityjs/lib/visibility.core.js ***!
   \**********************************************************/
 
 /*!**********************************************************!*\
@@ -3650,10 +3489,6 @@
 
 /*!***********************************************************!*\
   !*** ./node_modules/core-js/modules/es.string.replace.js ***!
-  \***********************************************************/
-
-/*!***********************************************************!*\
-  !*** ./node_modules/cross-fetch/dist/browser-ponyfill.js ***!
   \***********************************************************/
 
 /*!***********************************************************!*\
@@ -3801,10 +3636,6 @@
   \************************************************************/
 
 /*!************************************************************!*\
-  !*** ./node_modules/postcss-loader/src!./styleguidist.css ***!
-  \************************************************************/
-
-/*!************************************************************!*\
   !*** ./node_modules/ramda/src/internal/_checkForMethod.js ***!
   \************************************************************/
 
@@ -3850,10 +3681,6 @@
 
 /*!************************************************************!*\
   !*** ./node_modules/use-sidecar/dist/es2015/renderProp.js ***!
-  \************************************************************/
-
-/*!************************************************************!*\
-  !*** ./node_modules/visibilityjs/lib/visibility.timers.js ***!
   \************************************************************/
 
 /*!************************************************************!*\
@@ -4006,6 +3833,10 @@
 
 /*!*************************************************************!*\
   !*** ./node_modules/use-callback-ref/dist/es2015/useRef.js ***!
+  \*************************************************************/
+
+/*!*************************************************************!*\
+  !*** ./src/components/Channel/hooks/useMentionsHandlers.js ***!
   \*************************************************************/
 
 /*!*************************************************************!*\
@@ -4201,10 +4032,6 @@
   \***************************************************************/
 
 /*!***************************************************************!*\
-  !*** ./node_modules/regexp.prototype.flags/implementation.js ***!
-  \***************************************************************/
-
-/*!***************************************************************!*\
   !*** ./node_modules/remark-parse/lib/tokenize/code-fenced.js ***!
   \***************************************************************/
 
@@ -4226,6 +4053,10 @@
 
 /*!***************************************************************!*\
   !*** ./node_modules/use-callback-ref/dist/es2015/mergeRef.js ***!
+  \***************************************************************/
+
+/*!***************************************************************!*\
+  !*** ./src/components/Channel/hooks/useEditMessageHandler.js ***!
   \***************************************************************/
 
 /*!****************************************************************!*\
@@ -4753,9 +4584,16 @@
   \********************************************************************/
 
 /*!********************************************************************!*\
+  !*** ./node_modules/use-composed-ref/dist/use-composed-ref.esm.js ***!
+  \********************************************************************/
+
+<<<<<<< HEAD:docs/build/bundle.e6a8bfd1.js.LICENSE.txt
+=======
+/*!********************************************************************!*\
   !*** ./src/components/ChannelPreview/ChannelPreviewLastMessage.js ***!
   \********************************************************************/
 
+>>>>>>> upstream/master:docs/build/bundle.16aef901.js.LICENSE.txt
 /*!*********************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/iterableToArrayLimit.js ***!
   \*********************************************************************/
@@ -4913,10 +4751,6 @@
   \**********************************************************************/
 
 /*!**********************************************************************!*\
-  !*** ./node_modules/es-abstract/helpers/getOwnPropertyDescriptor.js ***!
-  \**********************************************************************/
-
-/*!**********************************************************************!*\
   !*** ./node_modules/html-to-react/lib/camel-case-attribute-names.js ***!
   \**********************************************************************/
 
@@ -5054,6 +4888,10 @@
 
 /*!**********************************************************************!*\
   !*** ./node_modules/use-callback-ref/dist/es2015/useTransformRef.js ***!
+  \**********************************************************************/
+
+/*!**********************************************************************!*\
+  !*** ./src/components/ChannelList/hooks/useChannelHiddenListener.js ***!
   \**********************************************************************/
 
 /*!***********************************************************************!*\
@@ -5216,6 +5054,10 @@
   !*** ./src/components/ChannelList/hooks/useChannelUpdatedListener.js ***!
   \***********************************************************************/
 
+/*!***********************************************************************!*\
+  !*** ./src/components/ChannelList/hooks/useChannelVisibleListener.js ***!
+  \***********************************************************************/
+
 /*!************************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/objectWithoutProperties.js ***!
   \************************************************************************/
@@ -5294,6 +5136,10 @@
 
 /*!*************************************************************************!*\
   !*** ./node_modules/inline-style-prefixer/static/plugins/transition.js ***!
+  \*************************************************************************/
+
+/*!*************************************************************************!*\
+  !*** ./node_modules/postcss-loader/src!./styleguidist/styleguidist.css ***!
   \*************************************************************************/
 
 /*!*************************************************************************!*\
@@ -6825,7 +6671,7 @@
   \******************************************************************************************/
 
 /*!******************************************************************************************!*\
-  !*** ./node_modules/react-textarea-autosize/dist/react-textarea-autosize.esm.browser.js ***!
+  !*** ./node_modules/react-textarea-autosize/dist/react-textarea-autosize.browser.esm.js ***!
   \******************************************************************************************/
 
 /*!******************************************************************************************!*\
@@ -7009,10 +6855,6 @@
   \**********************************************************************************************/
 
 /*!**********************************************************************************************!*\
-  !*** ./node_modules/react-styleguidist/lib/loaders/examples-loader.js!./src/docs/Channel.md ***!
-  \**********************************************************************************************/
-
-/*!**********************************************************************************************!*\
   !*** ./node_modules/react-styleguidist/lib/loaders/examples-loader.js!./src/docs/Message.md ***!
   \**********************************************************************************************/
 
@@ -7113,10 +6955,6 @@
   \*************************************************************************************************/
 
 /*!*************************************************************************************************!*\
-  !*** ./node_modules/react-styleguidist/lib/loaders/examples-loader.js!./src/docs/Attachment.md ***!
-  \*************************************************************************************************/
-
-/*!*************************************************************************************************!*\
   !*** ./node_modules/react-styleguidist/lib/loaders/examples-loader.js!./src/docs/Streami18n.md ***!
   \*************************************************************************************************/
 
@@ -7140,6 +6978,17 @@
   !*** ./node_modules/react-styleguidist/lib/loaders/examples-loader.js!./src/docs/MessageList.md ***!
   \**************************************************************************************************/
 
+<<<<<<< HEAD:docs/build/bundle.e6a8bfd1.js.LICENSE.txt
+=======
+/*!**************************************************************************************************!*\
+  !*** ./node_modules/react-styleguidist/lib/loaders/examples-loader.js!./src/docs/MessageTeam.md ***!
+  \**************************************************************************************************/
+
+/*!**************************************************************************************************!*\
+  !*** ./node_modules/react-styleguidist/lib/loaders/examples-loader.js!./src/docs/useUserRole.md ***!
+  \**************************************************************************************************/
+
+>>>>>>> upstream/master:docs/build/bundle.16aef901.js.LICENSE.txt
 /*!***************************************************************************************************!*\
   !*** ./node_modules/react-styleguidist/lib/client/rsg-components/Markdown/Table/TableRenderer.js ***!
   \***************************************************************************************************/
@@ -7196,6 +7045,10 @@
   !*** ./node_modules/regenerate-unicode-properties/Binary_Property/Default_Ignorable_Code_Point.js ***!
   \****************************************************************************************************/
 
+/*!****************************************************************************************************!*\
+  !*** ./node_modules/use-isomorphic-layout-effect/dist/use-isomorphic-layout-effect.browser.esm.js ***!
+  \****************************************************************************************************/
+
 /*!*****************************************************************************************************!*\
   !*** ./node_modules/react-styleguidist/lib/client/rsg-components/Markdown/MarkdownHeading/index.js ***!
   \*****************************************************************************************************/
@@ -7204,12 +7057,32 @@
   !*** ./node_modules/react-styleguidist/lib/loaders/examples-loader.js!./src/docs/ChannelContext.md ***!
   \*****************************************************************************************************/
 
+/*!*****************************************************************************************************!*\
+  !*** ./node_modules/react-styleguidist/lib/loaders/examples-loader.js!./src/docs/useEditHandler.md ***!
+  \*****************************************************************************************************/
+
+/*!*****************************************************************************************************!*\
+  !*** ./node_modules/react-styleguidist/lib/loaders/examples-loader.js!./src/docs/useFlagHandler.md ***!
+  \*****************************************************************************************************/
+
+/*!*****************************************************************************************************!*\
+  !*** ./node_modules/react-styleguidist/lib/loaders/examples-loader.js!./src/docs/useMuteHandler.md ***!
+  \*****************************************************************************************************/
+
+/*!*****************************************************************************************************!*\
+  !*** ./node_modules/react-styleguidist/lib/loaders/examples-loader.js!./src/docs/useUserHandler.md ***!
+  \*****************************************************************************************************/
+
 /*!******************************************************************************************************!*\
   !*** ./node_modules/react-styleguidist/lib/client/rsg-components/Markdown/Table/TableRowRenderer.js ***!
   \******************************************************************************************************/
 
 /*!******************************************************************************************************!*\
   !*** ./node_modules/react-styleguidist/lib/client/rsg-components/TableOfContents/TableOfContents.js ***!
+  \******************************************************************************************************/
+
+/*!******************************************************************************************************!*\
+  !*** ./node_modules/react-styleguidist/lib/loaders/examples-loader.js!./src/docs/useRetryHandler.md ***!
   \******************************************************************************************************/
 
 /*!******************************************************************************************************!*\
@@ -7237,6 +7110,13 @@
   \*******************************************************************************************************/
 
 /*!*******************************************************************************************************!*\
+<<<<<<< HEAD:docs/build/bundle.e6a8bfd1.js.LICENSE.txt
+=======
+  !*** ./node_modules/react-styleguidist/lib/loaders/examples-loader.js!./src/docs/useDeleteHandler.md ***!
+  \*******************************************************************************************************/
+
+/*!*******************************************************************************************************!*\
+>>>>>>> upstream/master:docs/build/bundle.16aef901.js.LICENSE.txt
   !*** ./node_modules/react-styleguidist/lib/loaders/props-loader.js!./src/components/Avatar/Avatar.js ***!
   \*******************************************************************************************************/
 
@@ -7253,11 +7133,27 @@
   \********************************************************************************************************/
 
 /*!********************************************************************************************************!*\
+<<<<<<< HEAD:docs/build/bundle.e6a8bfd1.js.LICENSE.txt
   !*** multi ./dist/css/index.css ./styleguidist.css ./node_modules/react-styleguidist/lib/client/index ***!
+=======
+  !*** ./node_modules/react-styleguidist/lib/loaders/examples-loader.js!./src/docs/MessageLivestream.md ***!
+>>>>>>> upstream/master:docs/build/bundle.16aef901.js.LICENSE.txt
   \********************************************************************************************************/
 
 /*!*********************************************************************************************************!*\
   !*** ./node_modules/react-styleguidist/lib/client/rsg-components/Markdown/Checkbox/CheckboxRenderer.js ***!
+  \*********************************************************************************************************/
+
+/*!*********************************************************************************************************!*\
+  !*** ./node_modules/react-styleguidist/lib/loaders/examples-loader.js!./src/docs/MessageCustomHooks.md ***!
+  \*********************************************************************************************************/
+
+/*!*********************************************************************************************************!*\
+  !*** ./node_modules/react-styleguidist/lib/loaders/examples-loader.js!./src/docs/useMentionsHandler.md ***!
+  \*********************************************************************************************************/
+
+/*!*********************************************************************************************************!*\
+  !*** ./node_modules/react-styleguidist/lib/loaders/examples-loader.js!./src/docs/useReactionHandler.md ***!
   \*********************************************************************************************************/
 
 /*!*********************************************************************************************************!*\
@@ -7275,6 +7171,10 @@
 /*!**********************************************************************************************************!*\
   !*** ./node_modules/react-styleguidist/lib/client/rsg-components/ToolbarButton/ToolbarButtonRenderer.js ***!
   \**********************************************************************************************************/
+
+/*!***********************************************************************************************************!*\
+  !*** ./node_modules/react-styleguidist/lib/loaders/examples-loader.js!./src/docs/useOpenThreadHandler.md ***!
+  \***********************************************************************************************************/
 
 /*!***********************************************************************************************************!*\
   !*** ./node_modules/react-styleguidist/lib/loaders/props-loader.js!./src/components/ChatDown/ChatDown.js ***!
@@ -7374,6 +7274,10 @@
 
 /*!*********************************************************************************************************************!*\
   !*** ./node_modules/react-styleguidist/lib/loaders/props-loader.js!./src/components/DateSeparator/DateSeparator.js ***!
+  \*********************************************************************************************************************/
+
+/*!*********************************************************************************************************************!*\
+  !*** multi ./dist/css/index.css ./styleguidist/styleguidist.css ./node_modules/react-styleguidist/lib/client/index ***!
   \*********************************************************************************************************************/
 
 /*!**********************************************************************************************************************!*\

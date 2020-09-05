@@ -1,7 +1,5 @@
 import React from 'react';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import axios from 'axios';
-import { cleanup, render, waitFor } from '@testing-library/react';
+import { cleanup, render, waitFor, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 import {
@@ -18,8 +16,6 @@ import {
 import { Chat } from '../../Chat';
 import MessageList from '../MessageList';
 import { Channel } from '../../Channel';
-
-jest.mock('axios');
 
 describe('MessageList', () => {
   afterEach(cleanup);
@@ -40,9 +36,8 @@ describe('MessageList', () => {
       ],
     });
 
-    useMockedApis(axios, [getOrCreateChannelApi(mockedChannel)]);
-
     chatClientVishal = await getTestClientWithUser({ id: 'vishal' });
+    useMockedApis(chatClientVishal, [getOrCreateChannelApi(mockedChannel)]);
     const channel = chatClientVishal.channel('messaging', mockedChannel.id);
     await channel.query();
 
@@ -58,10 +53,12 @@ describe('MessageList', () => {
     });
 
     const newMessage = generateMessage({ user: user2 });
-    dispatchMessageNewEvent(
-      chatClientVishal,
-      newMessage,
-      mockedChannel.channel,
+    act(() =>
+      dispatchMessageNewEvent(
+        chatClientVishal,
+        newMessage,
+        mockedChannel.channel,
+      ),
     );
 
     await waitFor(() => {

@@ -1,9 +1,6 @@
 import React, { useEffect, useContext } from 'react';
 import { render, waitFor, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import axios from 'axios';
-import Visibility from 'visibilityjs';
 import Immutable from 'seamless-immutable';
 import Channel from '../Channel';
 import { Chat } from '../../Chat';
@@ -21,13 +18,10 @@ import {
 } from '../../../mock-builders';
 import { LoadingErrorIndicator } from '../../Loading';
 
-jest.mock('axios');
 jest.mock('../../Loading', () => ({
   LoadingIndicator: jest.fn(() => <div>loading</div>),
   LoadingErrorIndicator: jest.fn(() => <div />),
 }));
-
-jest.mock('visibilityjs');
 
 let chatClient;
 let channel;
@@ -81,8 +75,8 @@ describe('Channel', () => {
       messages,
       members,
     });
-    useMockedApis(axios, [getOrCreateChannelApi(mockedChannel)]);
     chatClient = await getTestClientWithUser(user);
+    useMockedApis(chatClient, [getOrCreateChannelApi(mockedChannel)]);
     channel = chatClient.channel('messaging', mockedChannel.id);
   });
 
@@ -163,13 +157,18 @@ describe('Channel', () => {
   });
 
   it('should mark the current channel as read if the user switches to the current window', async () => {
-    // This mocks the Visibilityjs module so it immediately calls the change callback with state === 'visible'
-    jest.spyOn(Visibility, 'change').mockImplementationOnce((callback) => {
-      callback(new Event('change'), 'visible');
+    Object.defineProperty(document, 'hidden', {
+      configurable: true,
+      get: () => false,
     });
     const markReadSpy = jest.spyOn(channel, 'markRead');
+    const watchSpy = jest.spyOn(channel, 'watch');
 
     renderComponent();
+    // first, wait for the effect in which the channel is watched,
+    // so we know the event listener is added to the document.
+    await waitFor(() => expect(watchSpy).toHaveBeenCalledWith());
+    fireEvent(document, new Event('visibilitychange'));
 
     await waitFor(() => expect(markReadSpy).toHaveBeenCalledWith());
   });
@@ -181,6 +180,16 @@ describe('Channel', () => {
     renderComponent();
 
     await waitFor(() => expect(markReadSpy).toHaveBeenCalledWith());
+  });
+  it('should use the doMarkReadRequest prop to mark channel as read, if that is defined', async () => {
+    jest.spyOn(channel, 'countUnread').mockImplementationOnce(() => 1);
+    const doMarkReadRequest = jest.fn();
+
+    renderComponent({
+      doMarkReadRequest,
+    });
+
+    await waitFor(() => expect(doMarkReadRequest).toHaveBeenCalledTimes(1));
   });
 
   // eslint-disable-next-line sonarjs/cognitive-complexity
@@ -210,7 +219,7 @@ describe('Channel', () => {
 
       const replies = [generateMessage({ parent_id: threadMessage.id })];
 
-      useMockedApis(axios, [threadRepliesApi(replies)]);
+      useMockedApis(chatClient, [threadRepliesApi(replies)]);
 
       const hasThreadMessages = jest.fn();
 
@@ -337,7 +346,9 @@ describe('Channel', () => {
             !contextMessages.find((message) => message.id === newMessages[0].id)
           ) {
             // Our new message is not yet passed as part of channel context. Call loadMore and mock API response to include it.
-            useMockedApis(axios, [queryChannelWithNewMessages(newMessages)]);
+            useMockedApis(chatClient, [
+              queryChannelWithNewMessages(newMessages),
+            ]);
             loadMore(limit);
           } else {
             // If message has been added, update checker so we can verify it happened.
@@ -369,7 +380,9 @@ describe('Channel', () => {
               )
             ) {
               // Our new message is not yet passed as part of channel context. Call loadMore and mock API response to include it.
-              useMockedApis(axios, [queryChannelWithNewMessages(newMessages)]);
+              useMockedApis(chatClient, [
+                queryChannelWithNewMessages(newMessages),
+              ]);
               loadMore(limit);
             } else {
               // If message has been added, set our checker variable so we can verify if hasMore is false.
@@ -395,7 +408,9 @@ describe('Channel', () => {
               )
             ) {
               // Our new messages are not yet passed as part of channel context. Call loadMore and mock API response to include it.
-              useMockedApis(axios, [queryChannelWithNewMessages(newMessages)]);
+              useMockedApis(chatClient, [
+                queryChannelWithNewMessages(newMessages),
+              ]);
               loadMore(limit);
             } else {
               // If message has been added, set our checker variable so we can verify if hasMore is true.
@@ -496,7 +511,7 @@ describe('Channel', () => {
             children: <MockMessageList />,
           },
           ({ sendMessage }) => {
-            useMockedApis(axios, [
+            useMockedApis(chatClient, [
               sendMessageApi(generateMessage(messageResponse)),
             ]);
             if (!hasSent) sendMessage(sentMessage);
@@ -571,7 +586,7 @@ describe('Channel', () => {
               contextMessages.some(({ status }) => status === 'failed')
             ) {
               // retry
-              useMockedApis(axios, [
+              useMockedApis(chatClient, [
                 sendMessageApi(generateMessage(messageObject)),
               ]);
               retrySendMessage(messageObject);
@@ -643,7 +658,6 @@ describe('Channel', () => {
 
       it('should mark the channel as read if a new message from another user comes in and the user is looking at the page', async () => {
         const markReadSpy = jest.spyOn(channel, 'markRead');
-        jest.spyOn(Visibility, 'state').mockImplementation(() => 'visible');
 
         const message = generateMessage({ user: generateUser() });
         const dispatchMessageEvent = createChannelEventDispatcher({ message });
@@ -657,7 +671,10 @@ describe('Channel', () => {
 
       it('title of the page should include the unread count if the user is not looking at the page when a new message event happens', async () => {
         const unreadAmount = 1;
-        jest.spyOn(Visibility, 'state').mockImplementation(() => 'not visible');
+        Object.defineProperty(document, 'hidden', {
+          configurable: true,
+          get: () => true,
+        });
         jest
           .spyOn(channel, 'countUnread')
           .mockImplementation(() => unreadAmount);
@@ -688,7 +705,8 @@ describe('Channel', () => {
             openThread(threadMessage);
           } else if (thread.text !== newText) {
             // then, update the thread message
-            dispatchUpdateMessageEvent();
+            // FIXME: dispatch event needs to be queued on event loop now
+            setTimeout(() => dispatchUpdateMessageEvent(), 0);
           } else {
             threadStarterHasUpdatedText = true;
           }
@@ -714,7 +732,8 @@ describe('Channel', () => {
             !threadMessages.some(({ id }) => id === newThreadMessage.id)
           ) {
             // then, add new thread message
-            dispatchNewThreadMessageEvent();
+            // FIXME: dispatch event needs to be queued on event loop now
+            setTimeout(() => dispatchNewThreadMessageEvent(), 0);
           } else {
             newThreadMessageWasAdded = true;
           }
