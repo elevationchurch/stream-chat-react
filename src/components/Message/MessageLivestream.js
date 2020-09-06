@@ -1,18 +1,11 @@
-// @ts-check
-import React, {
-  useCallback,
-  useEffect,
-  useContext,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+// @ts-nocheck
+import React, { useContext, useMemo, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import MessageRepliesCountButton from './MessageRepliesCountButton';
 
 import { isOnlyEmojis, renderText, smartRender } from '../../utils';
-import { ChannelContext, TranslationContext } from '../../context';
+import { TranslationContext } from '../../context';
 
 import { Avatar } from '../Avatar';
 import { Attachment as DefaultAttachment } from '../Attachment';
@@ -38,9 +31,7 @@ import {
   getNonImageAttachments,
   areMessagePropsEqual,
 } from './utils';
-import { MessageActions } from '../MessageActions';
-import { ReactionIcon, ThreadIcon, ErrorIcon, Verified } from './icons';
-import MessageTimestamp from './MessageTimestamp';
+import { ErrorIcon, Verified } from './icons';
 
 /**
  * MessageLivestream - Render component, should be used together with the Message component
@@ -60,8 +51,6 @@ const MessageLivestreamComponent = (props) => {
     clearEditingState: propClearEdit,
     initialMessage,
     unsafeHTML,
-    formatDate,
-    channelConfig: propChannelConfig,
     ReactionsList = DefaultReactionsList,
     ReactionSelector = DefaultReactionSelector,
     onUserClick: propOnUserClick,
@@ -75,8 +64,8 @@ const MessageLivestreamComponent = (props) => {
     onMentionsHoverMessage: propOnMentionsHover,
     Attachment = DefaultAttachment,
     t: propT,
-    tDateTimeParser: propTDateTimeParser,
     MessageDeleted,
+    getMessageActions,
   } = props;
   const { t: contextT } = useContext(TranslationContext);
   const t = propT || contextT;
@@ -85,10 +74,6 @@ const MessageLivestreamComponent = (props) => {
   /**
    *@type {import('types').ChannelContextValue}
    */
-  const { updateMessage: channelUpdateMessage, channel } = useContext(
-    ChannelContext,
-  );
-  const channelConfig = propChannelConfig || channel?.getConfig();
   const { onMentionsClick, onMentionsHover } = useMentionsUIHandler(message, {
     onMentionsClick: propOnMentionsClick,
     onMentionsHover: propOnMentionsHover,
@@ -106,7 +91,7 @@ const MessageLivestreamComponent = (props) => {
   const clearEdit = propClearEdit || ownClearEditing;
   const handleRetry = useRetryHandler();
   const retryHandler = propHandleRetry || handleRetry;
-  const { onReactionListClick, showDetailedReactions } = useReactionClick(
+  const { showDetailedReactions } = useReactionClick(
     message,
     reactionSelectorRef,
     messageWrapperRef,
@@ -158,7 +143,7 @@ const MessageLivestreamComponent = (props) => {
           Input={EditMessageForm}
           message={message}
           clearEditingState={clearEdit}
-          updateMessage={propUpdateMessage || channelUpdateMessage}
+          updateMessage={propUpdateMessage}
         />
       </div>
     );
@@ -185,7 +170,7 @@ const MessageLivestreamComponent = (props) => {
             ref={reactionSelectorRef}
           />
         )}
-        <MessageLivestreamActions
+        {/* <MessageLivestreamActions
           initialMessage={initialMessage}
           message={message}
           formatDate={formatDate}
@@ -197,6 +182,28 @@ const MessageLivestreamComponent = (props) => {
           threadList={props.threadList}
           handleOpenThread={propHandleOpenThread || handleOpenThread}
           setEditingState={setEdit}
+        /> */}
+        <getMessageActions
+          addNotification={props.addNotification}
+          message={message}
+          getMessageActions={props.getMessageActions}
+          messageListRect={props.messageListRect}
+          messageWrapperRef={messageWrapperRef}
+          setEditingState={setEdit}
+          getMuteUserSuccessNotification={props.getMuteUserSuccessNotification}
+          getMuteUserErrorNotification={props.getMuteUserErrorNotification}
+          getFlagMessageErrorNotification={
+            props.getFlagMessageErrorNotification
+          }
+          getFlagMessageSuccessNotification={
+            props.getFlagMessageSuccessNotification
+          }
+          handleFlag={props.handleFlag}
+          handleMute={props.handleMute}
+          handleEdit={props.handleEdit}
+          handleDelete={props.handleDelete}
+          customWrapperClass={''}
+          inline
         />
         <div className="str-chat__message-livestream-left">
           <Avatar
@@ -308,103 +315,103 @@ const MessageLivestreamComponent = (props) => {
 /**
  * @type { React.FC<import('types').MessageLivestreamActionProps> }
  */
-const MessageLivestreamActions = (props) => {
-  const {
-    initialMessage,
-    message,
-    channelConfig,
-    threadList,
-    formatDate,
-    messageWrapperRef,
-    onReactionListClick,
-    getMessageActions,
-    handleOpenThread,
-    tDateTimeParser: propTDateTimeParser,
-  } = props;
-  const [actionsBoxOpen, setActionsBoxOpen] = useState(false);
-  /** @type {() => void} Typescript syntax */
-  const hideOptions = useCallback(() => setActionsBoxOpen(false), []);
-  const messageDeletedAt = !!message?.deleted_at;
-  const messageWrapper = messageWrapperRef?.current;
-  useEffect(() => {
-    if (messageWrapper) {
-      messageWrapper.addEventListener('mouseleave', hideOptions);
-    }
+// const MessageLivestreamActions = (props) => {
+//   const {
+//     initialMessage,
+//     message,
+//     channelConfig,
+//     threadList,
+//     formatDate,
+//     messageWrapperRef,
+//     onReactionListClick,
+//     getMessageActions,
+//     handleOpenThread,
+//     tDateTimeParser: propTDateTimeParser,
+//   } = props;
+//   const [actionsBoxOpen, setActionsBoxOpen] = useState(false);
+//   /** @type {() => void} Typescript syntax */
+//   const hideOptions = useCallback(() => setActionsBoxOpen(false), []);
+//   const messageDeletedAt = !!message?.deleted_at;
+//   const messageWrapper = messageWrapperRef?.current;
+//   useEffect(() => {
+//     if (messageWrapper) {
+//       messageWrapper.addEventListener('mouseleave', hideOptions);
+//     }
 
-    return () => {
-      if (messageWrapper) {
-        messageWrapper.removeEventListener('mouseleave', hideOptions);
-      }
-    };
-  }, [messageWrapper, hideOptions]);
-  useEffect(() => {
-    if (messageDeletedAt) {
-      document.removeEventListener('click', hideOptions);
-    }
-  }, [messageDeletedAt, hideOptions]);
+//     return () => {
+//       if (messageWrapper) {
+//         messageWrapper.removeEventListener('mouseleave', hideOptions);
+//       }
+//     };
+//   }, [messageWrapper, hideOptions]);
+//   useEffect(() => {
+//     if (messageDeletedAt) {
+//       document.removeEventListener('click', hideOptions);
+//     }
+//   }, [messageDeletedAt, hideOptions]);
 
-  useEffect(() => {
-    if (actionsBoxOpen) {
-      document.addEventListener('click', hideOptions);
-    } else {
-      document.removeEventListener('click', hideOptions);
-    }
-    return () => {
-      document.removeEventListener('click', hideOptions);
-    };
-  }, [actionsBoxOpen, hideOptions]);
+//   useEffect(() => {
+//     if (actionsBoxOpen) {
+//       document.addEventListener('click', hideOptions);
+//     } else {
+//       document.removeEventListener('click', hideOptions);
+//     }
+//     return () => {
+//       document.removeEventListener('click', hideOptions);
+//     };
+//   }, [actionsBoxOpen, hideOptions]);
 
-  if (
-    initialMessage ||
-    !message ||
-    message.type === 'error' ||
-    message.type === 'system' ||
-    message.type === 'ephemeral' ||
-    message.status === 'failed' ||
-    message.status === 'sending'
-  ) {
-    return null;
-  }
+//   if (
+//     initialMessage ||
+//     !message ||
+//     message.type === 'error' ||
+//     message.type === 'system' ||
+//     message.type === 'ephemeral' ||
+//     message.status === 'failed' ||
+//     message.status === 'sending'
+//   ) {
+//     return null;
+//   }
 
-  return (
-    <div
-      data-testid={'message-livestream-actions'}
-      className={`str-chat__message-livestream-actions`}
-    >
-      <MessageTimestamp
-        customClass="str-chat__message-livestream-time"
-        message={message}
-        formatDate={formatDate}
-        tDateTimeParser={propTDateTimeParser}
-      />
-      {channelConfig && channelConfig.reactions && (
-        <span
-          onClick={onReactionListClick}
-          data-testid="message-livestream-reactions-action"
-          className="chat-reaction-button"
-        >
-          <span>
-            <ReactionIcon />
-          </span>
-        </span>
-      )}
-      {!threadList && channelConfig && channelConfig.replies && (
-        <span
-          data-testid="message-livestream-thread-action"
-          onClick={handleOpenThread}
-        >
-          <ThreadIcon />
-        </span>
-      )}
-      <MessageActions
-        {...props}
-        getMessageActions={getMessageActions}
-        customWrapperClass={''}
-        inline
-      />
-    </div>
-  );
-};
+//   return (
+//     <div
+//       data-testid={'message-livestream-actions'}
+//       className={`str-chat__message-livestream-actions`}
+//     >
+//       <MessageTimestamp
+//         customClass="str-chat__message-livestream-time"
+//         message={message}
+//         formatDate={formatDate}
+//         tDateTimeParser={propTDateTimeParser}
+//       />
+//       {channelConfig && channelConfig.reactions && (
+//         <span
+//           onClick={onReactionListClick}
+//           data-testid="message-livestream-reactions-action"
+//           className="chat-reaction-button"
+//         >
+//           <span>
+//             <ReactionIcon />
+//           </span>
+//         </span>
+//       )}
+//       {!threadList && channelConfig && channelConfig.replies && (
+//         <span
+//           data-testid="message-livestream-thread-action"
+//           onClick={handleOpenThread}
+//         >
+//           <ThreadIcon />
+//         </span>
+//       )}
+//       <MessageActions
+//         {...props}
+//         getMessageActions={getMessageActions}
+//         customWrapperClass={''}
+//         inline
+//       />
+//     </div>
+//   );
+// };
 
 MessageLivestreamComponent.propTypes = {
   /** The [message object](https://getstream.io/chat/docs/#message_format) */
