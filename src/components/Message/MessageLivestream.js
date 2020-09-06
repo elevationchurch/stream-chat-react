@@ -31,6 +31,7 @@ import {
   getNonImageAttachments,
   areMessagePropsEqual,
 } from './utils';
+import { MessageActions } from '../MessageActions';
 import { ErrorIcon, Verified } from './icons';
 
 /**
@@ -65,7 +66,6 @@ const MessageLivestreamComponent = (props) => {
     Attachment = DefaultAttachment,
     t: propT,
     MessageDeleted,
-    getMessageActions,
   } = props;
   const { t: contextT } = useContext(TranslationContext);
   const t = propT || contextT;
@@ -183,7 +183,7 @@ const MessageLivestreamComponent = (props) => {
           handleOpenThread={propHandleOpenThread || handleOpenThread}
           setEditingState={setEdit}
         /> */}
-        <getMessageActions
+        <MessageActions
           addNotification={props.addNotification}
           message={message}
           getMessageActions={props.getMessageActions}
