@@ -10,8 +10,9 @@ export const useConnectionRecoveredListener = (forceUpdate) => {
   const { client } = useContext(ChatContext);
   useEffect(() => {
     const handleEvent = () => {
-      // eslint-disable-next-line babel/no-unused-expressions
-      forceUpdate?.();
+      if (forceUpdate) {
+        forceUpdate();
+      }
     };
 
     client.on('connection.recovered', handleEvent);

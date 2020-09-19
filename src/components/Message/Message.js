@@ -1,9 +1,9 @@
 // @ts-check
 import React, { useCallback, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Channel, StreamChat } from 'stream-chat';
 import { ChannelContext } from '../../context';
 import MessageSimple from './MessageSimple';
+import { checkChannelPropType, checkClientPropType } from '../../utils';
 import {
   MESSAGE_ACTIONS,
   getMessageActions,
@@ -136,14 +136,18 @@ Message.propTypes = {
       type: PropTypes.string.isRequired,
       reaction_counts: PropTypes.objectOf(PropTypes.number.isRequired),
       reaction_scores: PropTypes.objectOf(PropTypes.number.isRequired),
-      created_at: PropTypes.string.isRequired,
-      updated_at: PropTypes.string.isRequired,
+      created_at: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+      updated_at: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
     },
   ).isRequired),
   /** The client connection object for connecting to Stream */
-  client: PropTypes.instanceOf(StreamChat).isRequired,
+  client: /** @type {PropTypes.Validator<import('types').StreamChatReactClient>} */ (PropTypes.objectOf(
+    checkClientPropType,
+  ).isRequired),
   /** The current channel this message is displayed in */
-  channel: PropTypes.instanceOf(Channel).isRequired,
+  channel: /** @type {PropTypes.Validator<ReturnType<import('types').StreamChatReactClient['channel']>>} */ (PropTypes.objectOf(
+    checkChannelPropType,
+  ).isRequired),
   /** A list of users that have read this message */
   readBy: PropTypes.array,
   /** groupStyles, a list of styles to apply to this message. ie. top, bottom, single etc */
@@ -174,7 +178,7 @@ Message.propTypes = {
    * Attachment UI component to display attachment in individual message.
    * Available from [channel context](https://getstream.github.io/stream-chat-react/#channelcontext)
    * */
-  Attachment: /** @type {PropTypes.Validator<React.ElementType<import('types').AttachmentUIComponentProps>>} */ (PropTypes.elementType),
+  Attachment: /** @type {PropTypes.Validator<React.ElementType<import('types').WrapperAttachmentUIComponentProps>>} */ (PropTypes.elementType),
   /** render HTML instead of markdown. Posting HTML is only allowed server-side */
   unsafeHTML: PropTypes.bool,
   /**
@@ -223,7 +227,7 @@ Message.propTypes = {
   /** DOMRect object for parent MessageList component */
   messageListRect: /** @type {PropTypes.Validator<DOMRect>} */ (PropTypes.object),
   /** @see See [Channel Context](https://getstream.github.io/stream-chat-react/#channelcontext) */
-  members: /** @type {PropTypes.Validator<import('seamless-immutable').ImmutableObject<{[user_id: string]: import('stream-chat').Member}> | null | undefined>} */ (PropTypes.object),
+  members: /** @type {PropTypes.Validator<import('seamless-immutable').ImmutableObject<{[user_id: string]: import('stream-chat').ChannelMemberResponse<import('types').StreamChatReactUserType>}> | null | undefined>} */ (PropTypes.object),
   /**
    * Function to add custom notification on messagelist
    *

@@ -73,8 +73,9 @@ const ChannelList = (props) => {
         (chan) => chan.id === customActiveChannel,
       );
       if (customActiveChannelObject) {
-        // eslint-disable-next-line babel/no-unused-expressions
-        setActiveChannel?.(customActiveChannelObject, watchers);
+        if (setActiveChannel) {
+          setActiveChannel(customActiveChannelObject, watchers);
+        }
         const newChannels = moveChannelUp(
           customActiveChannelObject.cid,
           channels,
@@ -85,9 +86,8 @@ const ChannelList = (props) => {
       return;
     }
 
-    if (setActiveChannelOnMount) {
-      // eslint-disable-next-line babel/no-unused-expressions
-      setActiveChannel?.(channels[0], watchers);
+    if (setActiveChannelOnMount && setActiveChannel) {
+      setActiveChannel(channels[0], watchers);
     }
   };
 
@@ -138,11 +138,10 @@ const ChannelList = (props) => {
 
   // If the active channel is deleted, then unset the active channel.
   useEffect(() => {
-    /** @param {import('stream-chat').Event<string>} e */
+    /** @param {import('stream-chat').Event} e */
     const handleEvent = (e) => {
-      if (e?.cid === channel?.cid) {
-        // eslint-disable-next-line babel/no-unused-expressions
-        setActiveChannel?.();
+      if (setActiveChannel && e?.cid === channel?.cid) {
+        setActiveChannel();
       }
     };
 
@@ -334,7 +333,7 @@ ChannelList.propTypes = {
    * Object containing query filters
    * @see See [Channel query documentation](https://getstream.io/chat/docs/query_channels/?language=js) for a list of available fields for filter.
    * */
-  filters: /** @type {PropTypes.Validator<import('types').ChannelFilters>} */ (PropTypes.object),
+  filters: /** @type {PropTypes.Validator<import('stream-chat').ChannelFilters>} */ (PropTypes.object),
   /**
    * Object containing query options
    * @see See [Channel query documentation](https://getstream.io/chat/docs/query_channels/?language=js) for a list of available fields for options.
@@ -344,7 +343,7 @@ ChannelList.propTypes = {
    * Object containing sort parameters
    * @see See [Channel query documentation](https://getstream.io/chat/docs/query_channels/?language=js) for a list of available fields for sort.
    * */
-  sort: /** @type {PropTypes.Validator<import('types').ChannelSort>} */ (PropTypes.object),
+  sort: /** @type {PropTypes.Validator<import('stream-chat').ChannelSort>} */ (PropTypes.object),
   /**
    * Object containing watcher parameters
    * @see See [Pagination documentation](https://getstream.io/chat/docs/channel_pagination/?language=js) for a list of available fields for sort.

@@ -4,7 +4,7 @@ import { useEffect, useContext } from 'react';
 import { ChatContext } from '../../../context';
 
 /**
- * @typedef {import('stream-chat').Event<string>} ChannelUpdatedEvent
+ * @typedef {import('stream-chat').Event} ChannelUpdatedEvent
  * @typedef {React.Dispatch<React.SetStateAction<import('stream-chat').Channel[]>>} SetChannels
  * @param {SetChannels} setChannels
  * @param {(setChannels: SetChannels, event: ChannelUpdatedEvent) => void} [customHandler]
@@ -18,7 +18,7 @@ export const useChannelUpdatedListener = (
   const { client } = useContext(ChatContext);
 
   useEffect(() => {
-    /** @param {import('stream-chat').Event<string>} e */
+    /** @param {import('stream-chat').Event} e */
     const handleEvent = (e) => {
       setChannels((channels) => {
         const channelIndex = channels.findIndex(
@@ -33,8 +33,9 @@ export const useChannelUpdatedListener = (
 
         return channels;
       });
-      // eslint-disable-next-line babel/no-unused-expressions
-      forceUpdate?.();
+      if (forceUpdate) {
+        forceUpdate();
+      }
       if (customHandler && typeof customHandler === 'function') {
         customHandler(setChannels, e);
       }

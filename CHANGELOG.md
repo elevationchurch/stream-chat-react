@@ -1,5 +1,39 @@
 # Changelog
 
+## [2.4.0](https://github.com/GetStream/stream-chat-react/releases/tag/v2.4.0) 2020-09-17
+
+### Feature
+
+- [VirtualizedMessageList](https://github.com/GetStream/stream-chat-react/blob/master/src/docs/VirtualizedMessageList.md) is a new component that can handle thousands of messages in a channel. It uses a virtualized list under the hood. #487
+
+### Fix
+
+- Typescript generics of stream chat js are ABC adjusted #521
+
+## [2.3.3](https://github.com/GetStream/stream-chat-react/releases/tag/v2.3.3) 2020-09-15
+
+- Refactored Attachment component to now also accept a Gallery prop that will handle when the attachments array contains multiple images.
+- Upgraded react-file-utils which fixes image previews not displaying on the EditMessageForm
+- Fix PropType errors
+- Fix an issue with the infinite scroll on the MessageList when the client is offline
+
+## [2.3.2](https://github.com/GetStream/stream-chat-react/releases/tag/v2.3.2) 2020-09-10
+
+- Upgrading stream-chat to 2.2.2
+
+## [2.3.1](https://github.com/GetStream/stream-chat-react/releases/tag/v2.3.1) 2020-09-10
+
+- Upgrading stream-chat to 2.2.1
+
+## [2.3.0](https://github.com/GetStream/stream-chat-react/releases/tag/v2.3.0) 2020-09-10
+
+- Upgraded `stream-chat` package to `v2.2.0`
+
+  - `stream-chat` package has been migrated to complete typescript in 2.x.x. There were no breaking change with underlying
+    javascript api and also typescript except for [Event type](https://github.com/GetStream/stream-chat-js/blob/master/CHANGELOG.md#august-26-2020---200). We recommend you to check the changelog for stream-chat-js repository as well for more details
+    if you are planning to upgrade from `stream-chat-react@2.2.x` to `stream-chat-react@2.3.x`
+  - This PR which contains typescript related changes in stream-chat-react for given upgrade - https://github.com/GetStream/stream-chat-react/pull/499/files
+
 ## [2.2.2](https://github.com/GetStream/stream-chat-react/releases/tag/v2.2.2) 2020-08-21
 
 - Separated ConnectionStatus component from MessageList [82c8927](https://github.com/GetStream/stream-chat-react/commit/82c892773cd4aebed275259c93829ba6cb34b0be)

@@ -16,14 +16,14 @@ export const useMobileNavigation = (
     /** @param {MouseEvent} e */
     const handleClickOutside = (e) => {
       if (
+        closeMobileNav &&
         channelListRef.current &&
         !channelListRef.current.contains(
           /** @type {Node | null} */ (e.target),
         ) &&
         navOpen
       ) {
-        // eslint-disable-next-line babel/no-unused-expressions
-        closeMobileNav?.();
+        closeMobileNav();
       }
     };
 

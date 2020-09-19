@@ -9,7 +9,6 @@ import { TranslationContext } from '../../context';
 
 import { Avatar } from '../Avatar';
 import { Attachment as DefaultAttachment } from '../Attachment';
-import { Gallery } from '../Gallery';
 import { MessageInput, EditMessageForm } from '../MessageInput';
 import {
   SimpleReactionsList as DefaultReactionsList,
@@ -25,12 +24,7 @@ import {
   useMentionsUIHandler,
   useEditHandler,
 } from './hooks';
-import {
-  messageHasAttachments,
-  getImages,
-  getNonImageAttachments,
-  areMessagePropsEqual,
-} from './utils';
+import { areMessagePropsEqual } from './utils';
 import { MessageActions } from '../MessageActions';
 import { ErrorIcon, Verified } from './icons';
 
@@ -100,15 +94,13 @@ const MessageLivestreamComponent = (props) => {
     onUserClickHandler: propOnUserClick,
     onUserHoverHandler: propOnUserHover,
   });
+  const messageTextItem = message?.text;
+  const messageMentionedUsersItem = message?.mentioned_users;
   const messageText = useMemo(
-    () => renderText(message?.text, message?.mentioned_users),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [message?.text, message?.mentioned_users],
+    () => renderText(messageTextItem, messageMentionedUsersItem),
+    [messageTextItem, messageMentionedUsersItem],
   );
 
-  const hasAttachment = messageHasAttachments(message);
-  const galleryImages = getImages(message);
-  const attachments = getNonImageAttachments(message);
   const firstGroupStyle = groupStyles ? groupStyles[0] : '';
 
   if (
@@ -166,7 +158,7 @@ const MessageLivestreamComponent = (props) => {
             handleReaction={handleReaction}
             detailedView
             latest_reactions={message?.latest_reactions}
-            reaction_counts={message?.reaction_counts}
+            reaction_counts={message?.reaction_counts || undefined}
             ref={reactionSelectorRef}
           />
         )}
@@ -243,7 +235,8 @@ const MessageLivestreamComponent = (props) => {
 
               {message.type !== 'error' &&
                 message.status !== 'failed' &&
-                unsafeHTML && (
+                unsafeHTML &&
+                !!message.html && (
                   <div dangerouslySetInnerHTML={{ __html: message.html }} />
                 )}
 
@@ -279,22 +272,15 @@ const MessageLivestreamComponent = (props) => {
               )}
             </div>
 
-            {hasAttachment &&
-              attachments.map(
-                /** @type {(item: import('stream-chat').Attachment) => React.ReactElement | null} Typescript syntax */
-                (attachment, index) => (
-                  <Attachment
-                    key={`${message?.id}-${index}`}
-                    attachment={attachment}
-                    actionHandler={propHandleAction || handleAction}
-                  />
-                ),
-              )}
-
-            {galleryImages.length !== 0 && <Gallery images={galleryImages} />}
+            {message?.attachments && Attachment && (
+              <Attachment
+                attachments={message.attachments}
+                actionHandler={propHandleAction || handleAction}
+              />
+            )}
 
             <ReactionsList
-              reaction_counts={message.reaction_counts}
+              reaction_counts={message.reaction_counts || undefined}
               reactions={message.latest_reactions}
               handleReaction={propHandleReaction || handleReaction}
             />
@@ -421,7 +407,7 @@ MessageLivestreamComponent.propTypes = {
    * The attachment UI component.
    * Default: [Attachment](https://github.com/GetStream/stream-chat-react/blob/master/src/components/Attachment.js)
    * */
-  Attachment: /** @type {PropTypes.Validator<React.ElementType<import('types').AttachmentUIComponentProps>>} */ (PropTypes.elementType),
+  Attachment: /** @type {PropTypes.Validator<React.ElementType<import('types').WrapperAttachmentUIComponentProps>>} */ (PropTypes.elementType),
   /**
    *
    * @deprecated Its not recommended to use this anymore. All the methods in this HOC are provided explicitly.
