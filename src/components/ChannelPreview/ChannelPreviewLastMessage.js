@@ -17,9 +17,9 @@ const ChannelPreviewLastMessage = (props) => {
   const channelPreviewButton = useRef(null);
   const onSelectChannel = () => {
     props.setActiveChannel(props.channel, props.watchers);
-    // eslint-disable-next-line no-unused-expressions
-    // eslint-disable-next-line babel/no-unused-expressions
-    channelPreviewButton?.current?.blur();
+    if (channelPreviewButton?.current) {
+      channelPreviewButton.current.blur();
+    }
   };
 
   const unreadClass =

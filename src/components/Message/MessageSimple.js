@@ -2,11 +2,10 @@
 import React, { useContext, useRef } from 'react';
 import PropTypes from 'prop-types';
 import MessageRepliesCountButton from './MessageRepliesCountButton';
-import { getReadByTooltipText, smartRender } from '../../utils';
+import { smartRender } from '../../utils';
 import { TranslationContext, ChannelContext } from '../../context';
 import { Attachment as DefaultAttachment } from '../Attachment';
 import { Avatar } from '../Avatar';
-import { Gallery } from '../Gallery';
 import { Modal } from '../Modal';
 import { MessageInput, EditMessageForm } from '../MessageInput';
 import { Tooltip } from '../Tooltip';
@@ -31,6 +30,7 @@ import {
   areMessagePropsEqual,
   messageHasReactions,
   messageHasAttachments,
+  getReadByTooltipText,
 } from './utils';
 import { DeliveredCheckIcon } from './icons';
 import MessageTimestamp from './MessageTimestamp';
@@ -88,13 +88,6 @@ const MessageSimple = (props) => {
   const messageClasses = isMyMessage
     ? 'str-chat__message str-chat__message--me str-chat__message-simple str-chat__message-simple--me'
     : 'str-chat__message str-chat__message-simple';
-
-  const images =
-    hasAttachment &&
-    message?.attachments?.filter(
-      /** @type {(item: import('stream-chat').Attachment) => boolean} Typescript syntax */
-      (item) => item.type === 'image',
-    );
 
   if (message?.type === 'message.read' || message?.type === 'message.date') {
     return null;
@@ -170,7 +163,7 @@ const MessageSimple = (props) => {
                 {hasReactions && !showDetailedReactions && (
                   <ReactionsList
                     reactions={message.latest_reactions}
-                    reaction_counts={message.reaction_counts}
+                    reaction_counts={message.reaction_counts || undefined}
                     onClick={onReactionListClick}
                     reverse={true}
                   />
@@ -179,7 +172,7 @@ const MessageSimple = (props) => {
                   <ReactionSelector
                     handleReaction={propHandleReaction || handleReaction}
                     detailedView
-                    reaction_counts={message.reaction_counts}
+                    reaction_counts={message.reaction_counts || undefined}
                     latest_reactions={message.latest_reactions}
                     ref={reactionSelectorRef}
                   />
@@ -187,28 +180,13 @@ const MessageSimple = (props) => {
               </React.Fragment>
             )}
 
-            <div className="str-chat__message-attachment-container">
-              {hasAttachment &&
-                message.attachments?.map(
-                  /** @type {(item: import('stream-chat').Attachment) => React.ReactElement | null} Typescript syntax */
-                  (attachment, index) => {
-                    if (
-                      attachment.type === 'image' &&
-                      images &&
-                      images.length > 1
-                    )
-                      return null;
-                    return (
-                      <Attachment
-                        key={`${message.id}-${index}`}
-                        attachment={attachment}
-                        actionHandler={propHandleAction || handleAction}
-                      />
-                    );
-                  },
-                )}
-            </div>
-            {images && images.length > 1 && <Gallery images={images} />}
+            {message?.attachments && Attachment && (
+              <Attachment
+                attachments={message.attachments}
+                actionHandler={propHandleAction || handleAction}
+              />
+            )}
+
             {message.text && (
               <MessageText
                 {...props}
@@ -271,7 +249,7 @@ const MessageSimpleStatus = ({
     readBy.length === 1 &&
     readBy[0] &&
     client &&
-    readBy[0].id === client.user.id;
+    readBy[0].id === client.user?.id;
   if (message && message.status === 'sending') {
     return (
       <span
@@ -286,7 +264,7 @@ const MessageSimpleStatus = ({
   if (readBy && readBy.length !== 0 && !threadList && !justReadByMe) {
     const lastReadUser = readBy.filter(
       /** @type {(item: import('stream-chat').UserResponse) => boolean} Typescript syntax */
-      (item) => !!item && !!client && item.id !== client.user.id,
+      (item) => !!item && !!client && item.id !== client.user?.id,
     )[0];
     return (
       <span
@@ -295,8 +273,8 @@ const MessageSimpleStatus = ({
       >
         <Tooltip>{readBy && getReadByTooltipText(readBy, t, client)}</Tooltip>
         <Avatar
-          name={lastReadUser && lastReadUser.name ? lastReadUser.name : null}
-          image={lastReadUser && lastReadUser.image ? lastReadUser.image : null}
+          name={lastReadUser?.name}
+          image={lastReadUser?.image}
           size={15}
         />
         {readBy.length > 2 && (
@@ -337,7 +315,7 @@ MessageSimple.propTypes = {
    * The attachment UI component.
    * Default: [Attachment](https://github.com/GetStream/stream-chat-react/blob/master/src/components/Attachment.js)
    * */
-  Attachment: /** @type {PropTypes.Validator<React.ElementType<import('types').AttachmentUIComponentProps>>} */ (PropTypes.elementType),
+  Attachment: /** @type {PropTypes.Validator<React.ElementType<import('types').WrapperAttachmentUIComponentProps>>} */ (PropTypes.elementType),
   /**
    * @deprecated Its not recommended to use this anymore. All the methods in this HOC are provided explicitly.
    *

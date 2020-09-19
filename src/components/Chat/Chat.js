@@ -7,6 +7,8 @@ import Dayjs from 'dayjs';
 import { ChatContext, TranslationContext } from '../../context';
 import { Streami18n } from '../../i18n';
 
+import { version } from '../../../package.json';
+
 /**
  * Chat - Wrapper component for Chat. The needs to be placed around any other chat components.
  * This Chat component provides the ChatContext to all other components.
@@ -22,7 +24,7 @@ import { Streami18n } from '../../i18n';
  *
  * @example ../../docs/Chat.md
  * @typedef {import('stream-chat').Channel | undefined} ChannelState
- * @type {React.FC<{ client: import('stream-chat').StreamChat, theme?: string, i18nInstance?: Streami18n, initialNavOpen?: boolean }>}
+ * @type {React.FC<{ client: import('types').StreamChatReactClient, theme?: string, i18nInstance?: Streami18n, initialNavOpen?: boolean }>}
  */
 const Chat = ({
   client,
@@ -50,9 +52,21 @@ const Chat = ({
   const clientMutes = client?.user?.mutes;
 
   useEffect(() => {
+    const userAgent = client.getUserAgent();
+    if (!userAgent.includes('stream-chat-react')) {
+      // should result in something like:
+      // 'stream-chat-react-2.3.2-stream-chat-javascript-client-browser-2.2.2'
+      client.setUserAgent(`stream-chat-react-${version}-${userAgent}`);
+    }
+    // don't want client in dep array because it is a required
+    // prop for this component and we only want this run on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     setMutes(clientMutes || []);
 
-    /** @param {import('stream-chat').Event<string>} e */
+    /** @param {import('stream-chat').Event} e */
     const handleEvent = (e) => {
       if (e.type === 'notification.mutes_updated') setMutes(e.me?.mutes || []);
     };

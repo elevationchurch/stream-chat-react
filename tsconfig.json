@@ -14,11 +14,13 @@
     "declarationMap": true,
     "emitDeclarationOnly": true,
     "noEmitOnError": true,
+    "skipLibCheck": true,
     "lib": ["es2015", "dom"],
     "paths": {
       "*": ["src/@types/*"],
       "types": ["types/index.d.ts"]
-    }
+    },
+    "resolveJsonModule": true
   },
   "include": ["./src/**/*"]
 }

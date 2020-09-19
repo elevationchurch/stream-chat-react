@@ -2,8 +2,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
-import { Channel } from 'stream-chat';
-import { smartRender } from '../../utils';
+import { checkChannelPropType, smartRender } from '../../utils';
 import { withChannelContext, withTranslationContext } from '../../context';
 import { Message } from '../Message';
 import { MessageList } from '../MessageList';
@@ -18,7 +17,7 @@ import { MessageInput, MessageInputSmall } from '../MessageInput';
  * - additionalMessageInputProps
  *
  * @example ../../docs/Thread.md
- * @typedef { import('types').ThreadProps & import('types').ChannelContextValue & import('types').TranslationContextValue} Props
+ * @typedef {Omit<import('types').ThreadProps & import('types').ChannelContextValue & import('types').TranslationContextValue, 'client'>} Props
  * @extends PureComponent<Props, any>
  */
 class Thread extends PureComponent {
@@ -28,18 +27,20 @@ class Thread extends PureComponent {
     /** Make input focus on mounting thread */
     autoFocus: PropTypes.bool,
     /** **Available from [channel context](https://getstream.github.io/stream-chat-react/#channel)** */
-    channel: PropTypes.instanceOf(Channel).isRequired,
+    channel: /** @type {PropTypes.Validator<ReturnType<import('types').StreamChatReactClient['channel']>>} */ (PropTypes.objectOf(
+      checkChannelPropType,
+    ).isRequired),
     /** **Available from [channel context](https://getstream.github.io/stream-chat-react/#channel)** */
     Message: /** @type {PropTypes.Validator<React.ComponentType<import('types').MessageUIComponentProps>>} */ (PropTypes.elementType),
     /**
      * **Available from [channel context](https://getstream.github.io/stream-chat-react/#channel)**
      * The thread (the parent [message object](https://getstream.io/chat/docs/#message_format)) */
-    thread: /** @type {PropTypes.Validator<import('seamless-immutable').ImmutableObject<import('stream-chat').MessageResponse>>} */ (PropTypes.object),
+    thread: /** @type {PropTypes.Validator<ReturnType<import('types').StreamChatChannelState['messageToImmutable']> | null> } */ (PropTypes.object),
     /**
      * **Available from [channel context](https://getstream.github.io/stream-chat-react/#channel)**
      * The array of immutable messages to render. By default they are provided by parent Channel component */
     threadMessages:
-      /** @type {PropTypes.Validator<import('seamless-immutable').ImmutableArray<import('stream-chat').MessageResponse>>} */
+      /** @type {PropTypes.Validator<import('seamless-immutable').ImmutableArray<ReturnType<import('types').StreamChatChannelState['messageToImmutable']>>>} */
       (PropTypes.array),
     /**
      * **Available from [channel context](https://getstream.github.io/stream-chat-react/#channel)**
@@ -72,7 +73,7 @@ class Thread extends PureComponent {
      * Available props - https://getstream.github.io/stream-chat-react/#messageinput
      * */
     additionalMessageInputProps: PropTypes.object,
-    /** Customized MessageInput component to used within Thread instead of default MessageInput 
+    /** Customized MessageInput component to used within Thread instead of default MessageInput
         Useable as follows:
         ```
         <Thread MessageInput={(props) => <MessageInput parent={props.parent} Input={MessageInputSmall} /> }/>
