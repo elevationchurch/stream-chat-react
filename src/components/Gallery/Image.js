@@ -3,6 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import ModalWrapper from './ModalWrapper';
+import { sanitizeUrl } from '@braintree/sanitize-url';
 
 /**
  * Image - Small wrapper around an image tag, supports thumbnails
@@ -10,7 +11,7 @@ import ModalWrapper from './ModalWrapper';
  * @example ../../docs/Image.md
  * @extends {React.PureComponent<import('type').ImageProps>}
  */
-class Image extends React.PureComponent {
+class ImageComponent extends React.PureComponent {
   static propTypes = {
     /** The full size image url */
     image_url: PropTypes.string,
@@ -32,13 +33,14 @@ class Image extends React.PureComponent {
 
   render() {
     const { image_url, thumb_url, fallback } = this.props;
-    const formattedArray = [{ src: image_url || thumb_url }];
+    const imageSrc = sanitizeUrl(image_url || thumb_url);
+    const formattedArray = [{ src: imageSrc }];
     return (
       <React.Fragment>
         <img
           className="str-chat__message-attachment--img"
           onClick={this.toggleModal}
-          src={thumb_url || image_url}
+          src={imageSrc}
           alt={fallback}
           data-testid="image-test"
         />
@@ -54,4 +56,4 @@ class Image extends React.PureComponent {
   }
 }
 
-export default Image;
+export default ImageComponent;

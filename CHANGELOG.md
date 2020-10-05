@@ -1,5 +1,56 @@
 # Changelog
 
+## [3.0.1](https://github.com/GetStream/stream-chat-react/releases/tag/v3.0.1) 2020-10-05
+
+- Bumped dependencies [#558](https://github.com/GetStream/stream-chat-react/pull/558)
+
+## Fix
+
+- Fixed issues on docs [#556](https://github.com/GetStream/stream-chat-react/pull/556)
+- Fix type issues [#557](https://github.com/GetStream/stream-chat-react/pull/557)
+- Keep channel.members in sync [#561](https://github.com/GetStream/stream-chat-react/pull/561)
+
+## Added
+
+- Export EmojiPicker [#560](https://github.com/GetStream/stream-chat-react/pull/560)
+
+## [3.0.0](https://github.com/GetStream/stream-chat-react/releases/tag/v3.0.0) 2020-09-30
+
+### BREAKING CHANGES
+
+- Image component renamed to ImageComponent [#554](https://github.com/GetStream/stream-chat-react/pull/554)
+
+## [2.6.2](https://github.com/GetStream/stream-chat-react/releases/tag/v2.6.2) 2020-09-29
+
+### Fix
+
+- Fixed several type issues [#552](https://github.com/GetStream/stream-chat-react/pull/552)
+
+## [2.6.1](https://github.com/GetStream/stream-chat-react/releases/tag/v2.6.1) 2020-09-29
+
+### Fix
+
+- Fixed an issue with MessageLivestream where mutes and flags were not happening [#551](https://github.com/GetStream/stream-chat-react/pull/551)
+
+## [2.6.0](https://github.com/GetStream/stream-chat-react/releases/tag/v2.6.0) 2020-09-29
+
+### Feature
+
+- New messages date indicator in MessageList and VritualizedMessageList [#548](https://github.com/GetStream/stream-chat-react/pull/548)
+- Reply/Reactions are available in messageActions [#547](https://github.com/GetStream/stream-chat-react/pull/547)
+
+### Fix
+
+- Fix opacity on emoji in EditMessageForm [#540](https://github.com/GetStream/stream-chat-react/pull/540)
+- Sanitize URL image sources in Image component [#543](https://github.com/GetStream/stream-chat-react/pull/543)
+- Add first letter of display name to avatar [#545](https://github.com/GetStream/stream-chat-react/pull/545)
+
+## [2.5.0](https://github.com/GetStream/stream-chat-react/releases/tag/v2.5.0) 2020-09-24
+
+### Feature
+
+- TypingIndicator component is added by default to both MessageList and VirtualizedMessageList components. This component can also be used by its own. [#535](https://github.com/GetStream/stream-chat-react/pull/535)
+
 ## [2.4.0](https://github.com/GetStream/stream-chat-react/releases/tag/v2.4.0) 2020-09-17
 
 ### Feature

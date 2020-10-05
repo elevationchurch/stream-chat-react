@@ -13,17 +13,17 @@ import { ScrollSeekConfiguration } from 'react-virtuoso/dist/engines/scrollSeekE
 
 export type Mute = Client.Mute<StreamChatReactUserType>;
 export type AnyType = Record<string, any>;
-export type StreamChatReactUserType = {
+export type StreamChatReactUserType = AnyType & {
   status?: string;
   image?: string;
   mutes?: Array<Mute>;
 };
-export type StreamChatReactChannelType = {
+export type StreamChatReactChannelType = AnyType & {
   image?: string;
   subtitle?: string;
   member_count?: number;
 };
-export type StreamChatMessageType = {
+export type StreamChatMessageType = AnyType & {
   event?: Client.Event<
     AnyType,
     StreamChatReactChannelType,
@@ -444,6 +444,8 @@ export interface AvatarProps {
 export interface DateSeparatorProps extends TranslationContextValue {
   /** The date to format */
   date: Date;
+  /** If following messages are not new */
+  unread?: boolean;
   /** Set the position of the date in the separator */
   position?: 'left' | 'center' | 'right';
   /** Override the default formatting of the date. This is a function that has access to the original date object. Returns a string or Node  */
@@ -476,19 +478,21 @@ export interface VirtualizedMessageListInternalProps {
   /** **Available from [channel context](https://getstream.github.io/stream-chat-react/#channel)** */
   loadingMore: boolean;
   /** Set the limit to use when paginating messages */
-  messageLimit: number;
+  messageLimit?: number;
   /** Custom UI component to display messages. */
-  Message: React.ElementType<FixedHeightMessageProps>;
+  Message?: React.ElementType<FixedHeightMessageProps>;
   /** Custom UI component to display deleted messages. */
-  MessageDeleted: React.ElementType<MessageDeletedProps>;
+  MessageDeleted?: React.ElementType<MessageDeletedProps>;
   /** Custom UI component to display system messages */
-  MessageSystem: React.ElementType<EventComponentProps>;
+  MessageSystem?: React.ElementType<EventComponentProps>;
   /** The UI Indicator to use when MessagerList or ChannelList is empty */
-  EmptyStateIndicator: React.ElementType<EmptyStateIndicatorProps>;
+  EmptyStateIndicator?: React.ElementType<EmptyStateIndicatorProps>;
+  /** The UI Indicator to use when someone is typing */
+  TypingIndicator?: React.ElementType<TypingIndicatorProps>;
   /** Component to render at the top of the MessageList while loading new messages */
-  LoadingIndicator: React.ElementType<LoadingIndicatorProps>;
+  LoadingIndicator?: React.ElementType<LoadingIndicatorProps>;
   /** Causes the underlying list to render extra content in addition to the necessary one to fill in the visible viewport. */
-  overscan: number;
+  overscan?: number;
   /** Performance improvement by showing placeholders if user scrolls fast through list
    * it can be used like this:
    *  {
@@ -505,13 +509,12 @@ export interface VirtualizedMessageListProps
   extends Partial<VirtualizedMessageListInternalProps> {}
 
 export interface MessageListProps {
-  /** Typing indicator component to render  */
-  TypingIndicator?: React.ElementType<TypingIndicatorProps>;
   /** Component to render at the top of the MessageList */
   HeaderComponent?: React.ElementType;
   /** Component to render at the top of the MessageList */
   EmptyStateIndicator?: React.ElementType<EmptyStateIndicatorProps>;
   LoadingIndicator?: React.ElementType<LoadingIndicatorProps>;
+  TypingIndicator?: React.ElementType<TypingIndicatorProps>;
   /** Date separator component to render  */
   dateSeparator?: React.ElementType<DateSeparatorProps>;
   DateSeparator?: React.ElementType<DateSeparatorProps>;
@@ -688,7 +691,10 @@ export interface ExtendedAttachment extends Client.Attachment {
   id?: string;
   asset_url?: string;
   mime_type?: string;
-  images?: Array;
+  images?: Array<{
+    image_url?: string;
+    thumb_url?: string;
+  }>;
 }
 
 export interface BaseAttachmentUIComponentProps {
@@ -857,8 +863,7 @@ export interface ThreadProps {
 }
 
 export interface TypingIndicatorProps {
-  typing: object;
-  client: Client.StreamChat;
+  avatarSize?: number;
 }
 
 export interface ReactionSelectorProps {
@@ -1238,6 +1243,7 @@ export const MessageCommerce: React.FC<MessageCommerceProps>;
 
 export interface MessageLivestreamProps extends MessageUIComponentProps {}
 export interface MessageLivestreamActionProps {
+  addNotification?(notificationText: string, type: string): any;
   initialMessage?: boolean;
   message?: Client.MessageResponse;
   tDateTimeParser?(datetime: string | number): Dayjs.Dayjs;
