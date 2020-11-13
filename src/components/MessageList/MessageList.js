@@ -165,7 +165,7 @@ class MessageList extends PureComponent {
     this.setState({ newMessagesNotification: false });
   };
 
-  userScrolledUp = () => this.scrollOffset > 200;
+  userScrolledUp = () => this.scrollOffset > 100;
 
   listenToScroll = (offset, reverseOffset, threshold) => {
     this.scrollOffset = offset;
