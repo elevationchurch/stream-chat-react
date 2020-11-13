@@ -85,11 +85,11 @@ const MessageLivestreamComponent = (props) => {
   const clearEdit = propClearEdit || ownClearEditing;
   const handleRetry = useRetryHandler();
   const retryHandler = propHandleRetry || handleRetry;
-  const { showDetailedReactions } = useReactionClick(
-    message,
-    reactionSelectorRef,
-    messageWrapperRef,
-  );
+  const {
+    // onReactionListClick,
+    showDetailedReactions,
+    isReactionEnabled,
+  } = useReactionClick(message, reactionSelectorRef, messageWrapperRef);
   const { onUserClick, onUserHover } = useUserHandler(message, {
     onUserClickHandler: propOnUserClick,
     onUserHoverHandler: propOnUserHover,
@@ -152,13 +152,14 @@ const MessageLivestreamComponent = (props) => {
         }`}
         ref={messageWrapperRef}
       >
-        {showDetailedReactions && (
+        {showDetailedReactions && isReactionEnabled && (
           <ReactionSelector
             reverse={false}
             handleReaction={handleReaction}
             detailedView
             latest_reactions={message?.latest_reactions}
             reaction_counts={message?.reaction_counts || undefined}
+            own_reactions={message.own_reactions}
             ref={reactionSelectorRef}
           />
         )}
@@ -172,6 +173,7 @@ const MessageLivestreamComponent = (props) => {
           tDateTimeParser={propTDateTimeParser}
           channelConfig={channelConfig}
           threadList={props.threadList}
+          addNotification={props.addNotification}
           handleOpenThread={propHandleOpenThread || handleOpenThread}
           setEditingState={setEdit}
         /> */}
@@ -279,11 +281,14 @@ const MessageLivestreamComponent = (props) => {
               />
             )}
 
-            <ReactionsList
-              reaction_counts={message.reaction_counts || undefined}
-              reactions={message.latest_reactions}
-              handleReaction={propHandleReaction || handleReaction}
-            />
+            {isReactionEnabled && (
+              <ReactionsList
+                reaction_counts={message.reaction_counts || undefined}
+                reactions={message.latest_reactions}
+                own_reactions={message.own_reactions}
+                handleReaction={propHandleReaction || handleReaction}
+              />
+            )}
 
             {!initialMessage && (
               <MessageRepliesCountButton

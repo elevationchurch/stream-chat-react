@@ -17,6 +17,7 @@ import { EmptyStateIndicator as DefaultEmptyStateIndicator } from '../EmptyState
 import { LoadingIndicator as DefaultLoadingIndicator } from '../Loading';
 import { EventComponent } from '../EventComponent';
 import { DateSeparator as DefaultDateSeparator } from '../DateSeparator';
+import { TypingIndicator as DefaultTypingIndicator } from '../TypingIndicator';
 
 /**
  * MessageList - The message list components renders a list of messages. Its a consumer of [Channel Context](https://getstream.github.io/stream-chat-react/#channel)
@@ -164,10 +165,11 @@ class MessageList extends PureComponent {
     this.setState({ newMessagesNotification: false });
   };
 
-  userScrolledUp = () => this.scrollOffset > 310;
+  userScrolledUp = () => this.scrollOffset > 200;
 
-  listenToScroll = (offset) => {
+  listenToScroll = (offset, reverseOffset, threshold) => {
     this.scrollOffset = offset;
+    this.closeToTop = reverseOffset < threshold;
     if (this.state.newMessagesNotification && !this.userScrolledUp()) {
       this.setState({ newMessagesNotification: false });
     }
@@ -205,7 +207,7 @@ class MessageList extends PureComponent {
   onMessageLoadCaptured = () => {
     // A load event (emitted by e.g. an <img>) was captured on a message.
     // In some cases, the loaded asset is larger than the placeholder, which means we have to scroll down.
-    if (!this.userScrolledUp()) {
+    if (!this.userScrolledUp() && !this.closeToTop) {
       this.scrollToBottom();
     }
   };
@@ -228,6 +230,7 @@ class MessageList extends PureComponent {
         >
           <MessageListInner
             EmptyStateIndicator={this.props.EmptyStateIndicator}
+            TypingIndicator={this.props.TypingIndicator}
             MessageSystem={this.props.MessageSystem}
             HeaderComponent={this.props.HeaderComponent}
             headerPosition={this.props.headerPosition}
@@ -236,6 +239,7 @@ class MessageList extends PureComponent {
             noGroupByUser={this.props.noGroupByUser}
             threadList={this.props.threadList}
             client={this.props.client}
+            channel={this.props.channel}
             read={this.props.read}
             bottomRef={this.bottomRef}
             onMessageLoadCaptured={this.onMessageLoadCaptured}
@@ -377,6 +381,12 @@ MessageList.propTypes = {
    */
   MessageSystem: PropTypes.elementType,
   /**
+   * Typing indicator UI component to render
+   *
+   * Defaults to and accepts same props as: [TypingIndicator](https://github.com/GetStream/stream-chat-react/blob/master/src/components/TypingIndicator/TypingIndicator.js)
+   * */
+  TypingIndicator: PropTypes.elementType,
+  /**
    * The UI Indicator to use when MessagerList or ChannelList is empty
    * */
   EmptyStateIndicator: PropTypes.elementType,
@@ -427,6 +437,7 @@ MessageList.defaultProps = {
   Attachment,
   DateSeparator: DefaultDateSeparator,
   LoadingIndicator: DefaultLoadingIndicator,
+  TypingIndicator: DefaultTypingIndicator,
   EmptyStateIndicator: DefaultEmptyStateIndicator,
   unsafeHTML: false,
   noGroupByUser: false,

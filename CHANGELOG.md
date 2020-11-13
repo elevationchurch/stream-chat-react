@@ -1,5 +1,166 @@
 # Changelog
 
+## [3.2.3](https://github.com/GetStream/stream-chat-react/releases/tag/v3.2.3) 2020-11-13
+
+## Fix
+
+- Email links are clickable [#607](https://github.com/GetStream/stream-chat-react/pull/607)
+- `message.own_reactions` passed into Reaction components [#604](https://github.com/GetStream/stream-chat-react/pull/604)
+
+## [3.2.2](https://github.com/GetStream/stream-chat-react/releases/tag/v3.2.2) 2020-11-05
+
+## Fix
+
+- `VirtualizedMessageList` breaking the list for falsy messages [#602](https://github.com/GetStream/stream-chat-react/pull/602)
+- `FixedHeightMessage` action box not opening in React@17 [#602](https://github.com/GetStream/stream-chat-react/pull/602)
+- Missing custom hooks type [#601](https://github.com/GetStream/stream-chat-react/pull/601)
+
+## [3.2.1](https://github.com/GetStream/stream-chat-react/releases/tag/v3.2.1) 2020-11-04
+
+## Fix
+
+- `VirtualizedMessageList` stick to bottom [#597](https://github.com/GetStream/stream-chat-react/pull/597)
+
+## [3.2.0](https://github.com/GetStream/stream-chat-react/releases/tag/v3.2.0) 2020-11-04
+
+## Chore
+
+- Support React v17 [#588](https://github.com/GetStream/stream-chat-react/pull/588)
+
+## [3.1.7](https://github.com/GetStream/stream-chat-react/releases/tag/v3.1.7) 2020-10-29
+
+## Fix
+
+- Improved errorHandling on failed uploads. [#596](https://github.com/GetStream/stream-chat-react/pull/596)
+- Escape special characters in mentioned_users names [#591](https://github.com/GetStream/stream-chat-react/pull/591)
+- Improve handling max files(10) in MessageInput [#593](https://github.com/GetStream/stream-chat-react/pull/593)
+
+## [3.1.6](https://github.com/GetStream/stream-chat-react/releases/tag/v3.1.6) 2020-10-21
+
+## Fix
+
+- `displayActions` prop is respected in `MessageOptions` component [#587](https://github.com/GetStream/stream-chat-react/pull/587)
+
+## Chore
+
+- `stream-chat-js` required version bumped to `2.7.x` [#582](https://github.com/GetStream/stream-chat-react/pull/582)
+
+## [3.1.5](https://github.com/GetStream/stream-chat-react/releases/tag/v3.1.5) 2020-10-19
+
+## Feature
+
+- Disable upload dropzone and input button in Input components based on channel config [#585](https://github.com/GetStream/stream-chat-react/pull/585)
+
+## Fix
+
+- Disable the upload dropzone and input button when the maximum number of allowed attachments is reached [#577](https://github.com/GetStream/stream-chat-react/pull/577)
+
+## [3.1.4](https://github.com/GetStream/stream-chat-react/releases/tag/v3.1.4) 2020-10-19
+
+## Fix
+
+- Fixed a bug with ChannelList pagination with low limits or high thresholds [#583](https://github.com/GetStream/stream-chat-react/pull/583)
+
+## Added
+
+- Disable reactions based on channel config [#581](https://github.com/GetStream/stream-chat-react/pull/581)
+- Disable Thread based on channel config [#580](https://github.com/GetStream/stream-chat-react/pull/580)
+- Disable TypingIndicator based on channel config [#579](https://github.com/GetStream/stream-chat-react/pull/579)
+
+## [3.1.3](https://github.com/GetStream/stream-chat-react/releases/tag/v3.1.3) 2020-10-15
+
+## Fix
+
+- Better handling of offsets during loadMore [#578](https://github.com/GetStream/stream-chat-react/pull/578)
+
+## [3.1.2](https://github.com/GetStream/stream-chat-react/releases/tag/v3.1.2) 2020-10-14
+
+# Fix
+
+Event handler for `message.new` by default moves the channel to top of the list. But it didn't handle the case where channel was not already present in list. `useMessageNewHandler` has been updated to handle this case. [c563252](https://github.com/GetStream/stream-chat-react/commit/c5632521566fe8ad8c3a05a6648b4cdc3c4daafe)
+
+## [3.1.1](https://github.com/GetStream/stream-chat-react/releases/tag/v3.1.1) 2020-10-14
+
+## Fix
+
+- FixedHeightMessage text overflow [#573](https://github.com/GetStream/stream-chat-react/pull/573)
+- Prevent state updates on unmounted Channel component [#566](https://github.com/GetStream/stream-chat-react/pull/566)
+
+## [3.1.0](https://github.com/GetStream/stream-chat-react/releases/tag/v3.1.0) 2020-10-14
+
+## Feature
+
+- VirtualizedMessageList supports message grouping [#571](https://github.com/GetStream/stream-chat-react/pull/571)
+
+```js
+<VirtualizedMessageList shouldGroupByUser />
+```
+
+## Fix
+
+- VirtualizedMessageList TypingIndicator is disabled by default [#571](https://github.com/GetStream/stream-chat-react/pull/571)
+
+## [3.0.3](https://github.com/GetStream/stream-chat-react/releases/tag/v3.0.3) 2020-10-13
+
+## Fix
+
+- Security [issue](https://github.com/GetStream/stream-chat-react/issues/569) due to missing `rel="noopener noreferrer"` in rendered links [#570](https://github.com/GetStream/stream-chat-react/pull/570)
+
+## [3.0.2](https://github.com/GetStream/stream-chat-react/releases/tag/v3.0.2) 2020-10-12
+
+- Bump stream-chat to v2.6.0 [#568](https://github.com/GetStream/stream-chat-react/pull/568)
+
+## [3.0.1](https://github.com/GetStream/stream-chat-react/releases/tag/v3.0.1) 2020-10-05
+
+- Bumped dependencies [#558](https://github.com/GetStream/stream-chat-react/pull/558)
+
+## Fix
+
+- Fixed issues on docs [#556](https://github.com/GetStream/stream-chat-react/pull/556)
+- Fix type issues [#557](https://github.com/GetStream/stream-chat-react/pull/557)
+- Keep channel.members in sync [#561](https://github.com/GetStream/stream-chat-react/pull/561)
+
+## Added
+
+- Export EmojiPicker [#560](https://github.com/GetStream/stream-chat-react/pull/560)
+
+## [3.0.0](https://github.com/GetStream/stream-chat-react/releases/tag/v3.0.0) 2020-09-30
+
+### BREAKING CHANGES
+
+- Image component renamed to ImageComponent [#554](https://github.com/GetStream/stream-chat-react/pull/554)
+
+## [2.6.2](https://github.com/GetStream/stream-chat-react/releases/tag/v2.6.2) 2020-09-29
+
+### Fix
+
+- Fixed several type issues [#552](https://github.com/GetStream/stream-chat-react/pull/552)
+
+## [2.6.1](https://github.com/GetStream/stream-chat-react/releases/tag/v2.6.1) 2020-09-29
+
+### Fix
+
+- Fixed an issue with MessageLivestream where mutes and flags were not happening [#551](https://github.com/GetStream/stream-chat-react/pull/551)
+
+## [2.6.0](https://github.com/GetStream/stream-chat-react/releases/tag/v2.6.0) 2020-09-29
+
+### Feature
+
+- New messages date indicator in MessageList and VritualizedMessageList [#548](https://github.com/GetStream/stream-chat-react/pull/548)
+- Reply/Reactions are available in messageActions [#547](https://github.com/GetStream/stream-chat-react/pull/547)
+
+### Fix
+
+- Fix opacity on emoji in EditMessageForm [#540](https://github.com/GetStream/stream-chat-react/pull/540)
+- Sanitize URL image sources in Image component [#543](https://github.com/GetStream/stream-chat-react/pull/543)
+- Add first letter of display name to avatar [#545](https://github.com/GetStream/stream-chat-react/pull/545)
+
+## [2.5.0](https://github.com/GetStream/stream-chat-react/releases/tag/v2.5.0) 2020-09-24
+
+### Feature
+
+- TypingIndicator component is added by default to both MessageList and VirtualizedMessageList components. This component can also be used by its own. [#535](https://github.com/GetStream/stream-chat-react/pull/535)
+
 ## [2.4.0](https://github.com/GetStream/stream-chat-react/releases/tag/v2.4.0) 2020-09-17
 
 ### Feature

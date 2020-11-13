@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { MAX_QUERY_CHANNELS_LIMIT } from '../utils';
 /**
  * @typedef {import('stream-chat').Channel} Channel
- * @param {import('stream-chat').StreamChat} client
+ * @param {import('types').StreamChatReactClient} client
  * @param {import('stream-chat').ChannelFilters} filters
  * @param {import('stream-chat').ChannelSort} [sort]
  * @param {import('stream-chat').ChannelOptions} [options]
@@ -56,9 +56,7 @@ export const usePaginatedChannels = (
       }
 
       setChannels(newChannels);
-      setRefreshing(false);
       setHasNextPage(channelQueryResponse.length >= newOptions.limit);
-
       // Set active channel only after first page.
       if (offset === 0 && activeChannelHandler) {
         activeChannelHandler(newChannels, setChannels);
