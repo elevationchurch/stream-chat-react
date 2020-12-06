@@ -198,7 +198,10 @@ const ChannelInner = ({
         ) {
           if (!document.hidden) {
             markReadThrottled();
-          } else if (channel.getConfig()?.read_events) {
+          } else if (
+            channel.getConfig()?.read_events &&
+            !channel.muteStatus().muted
+          ) {
             const unread = channel.countUnread(lastRead.current);
             document.title = `(${unread}) ${originalTitle.current}`;
           }
@@ -290,7 +293,7 @@ const ChannelInner = ({
 
   const loadMore = useCallback(
     async (limit = 100) => {
-      if (!online.current) return 0;
+      if (!online.current || !window.navigator.onLine) return 0;
       // prevent duplicate loading events...
       const oldestMessage = state.messages[0];
       if (state.loadingMore || oldestMessage?.status !== 'received') return 0;
