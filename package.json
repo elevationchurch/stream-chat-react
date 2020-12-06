@@ -1,8 +1,5 @@
 {
   "name": "@elevationdigital/stream-chat-react",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
-  },
   "version": "3.3.0",
   "description": "React components to create chat conversations or livestream style chat",
   "author": "GetStream",
@@ -22,6 +19,10 @@
     "getstream",
     "getstream.io"
   ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "repository": "github:elevationdigital/stream-chat-react/",
   "dependencies": {
     "@braintree/sanitize-url": "5.0.0",
     "custom-event": "^1.0.1",
