@@ -1,5 +1,8 @@
 {
   "name": "@elevationdigital/stream-chat-react",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "version": "3.3.0",
   "description": "React components to create chat conversations or livestream style chat",
   "author": "GetStream",
