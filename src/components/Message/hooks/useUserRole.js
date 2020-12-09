@@ -17,6 +17,7 @@ export const useUserRole = (message) => {
   const isOwner = channel?.state?.membership?.role === 'owner';
   const isModerator =
     channel?.state?.membership?.role === 'channel_moderator' ||
+    client?.user?.role === 'channel_moderator' ||
     channel?.state?.membership?.role === 'moderator';
   const canEditMessage = isMyMessage || isModerator || isOwner || isAdmin;
   const canDeleteMessage = canEditMessage;

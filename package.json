@@ -22,7 +22,7 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
-  "repository": "github:elevationdigital/stream-chat-react/",
+  "repository": "git://github.com/elevationdigital/stream-chat-react",
   "dependencies": {
     "@braintree/sanitize-url": "5.0.0",
     "custom-event": "^1.0.1",
