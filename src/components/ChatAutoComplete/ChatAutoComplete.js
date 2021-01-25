@@ -25,7 +25,10 @@ const emojiReplace = (word) => {
 
 /** @type {React.FC<import("types").ChatAutoCompleteProps>} */
 const ChatAutoComplete = (props) => {
+  const { commands, onSelectItem, triggers } = props;
+
   const { channel } = useContext(ChannelContext);
+
   const members = channel?.state?.members;
   const watchers = channel?.state?.watchers;
 
@@ -66,7 +69,6 @@ const ChatAutoComplete = (props) => {
     [channel?.queryMembers],
   );
 
-  const { commands, onSelectItem, triggers } = props;
   /**
    * dataProvider accepts `onReady` function, which will executed once the data is ready.
    * Another approach would have been to simply return the data from dataProvider and let the
@@ -187,9 +189,9 @@ const ChatAutoComplete = (props) => {
         },
       },
     [
-      members,
-      getMembersAndWatchers,
       commands,
+      getMembersAndWatchers,
+      members,
       onSelectItem,
       queryMembersdebounced,
       triggers,
@@ -227,6 +229,8 @@ const ChatAutoComplete = (props) => {
       value={props.value}
       grow={props.grow}
       disabled={props.disabled}
+      disableMentions={props.disableMentions}
+      SuggestionList={props.SuggestionList}
       additionalTextareaProps={props.additionalTextareaProps}
     />
   );
@@ -241,6 +245,8 @@ ChatAutoComplete.propTypes = {
   maxRows: PropTypes.number,
   /** Make the textarea disabled */
   disabled: PropTypes.bool,
+  /** Disable mentions */
+  disableMentions: PropTypes.bool,
   /** The value of the textarea */
   value: PropTypes.string,
   /** Function to run on pasting within the textarea */
@@ -249,11 +255,10 @@ ChatAutoComplete.propTypes = {
   handleSubmit: PropTypes.func,
   /** Function that runs on change */
   onChange: PropTypes.func,
-  /** Placeholder for the textare */
+  /** Placeholder for the textarea */
   placeholder: PropTypes.string,
   /** What loading component to use for the auto complete when loading results. */
-  // @ts-ignore
-  LoadingIndicator: PropTypes.elementType,
+  LoadingIndicator: /** @type {PropTypes.Validator<React.ElementType<import('types').LoadingIndicatorProps>>} */ (PropTypes.elementType),
   /** Minimum number of Character */
   minChar: PropTypes.number,
   /**
@@ -266,8 +271,10 @@ ChatAutoComplete.propTypes = {
   commands: PropTypes.array,
   /** Listener for onfocus event on textarea */
   onFocus: PropTypes.func,
+  /** Optional UI component prop to override the default List component that displays suggestions */
+  SuggestionList: /** @type {PropTypes.Validator<React.ElementType<import('types').SuggestionListProps>>} */ (PropTypes.elementType),
   /**
-   * Any additional attrubutes that you may want to add for underlying HTML textarea element.
+   * Any additional attributes that you may want to add for underlying HTML textarea element.
    */
   additionalTextareaProps: PropTypes.object,
 };
