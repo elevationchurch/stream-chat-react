@@ -275,6 +275,18 @@ export interface ChannelListProps {
   List?: React.ElementType<ChannelListUIComponentProps>;
   Paginator?: React.ElementType<PaginatorProps>;
   lockChannelOrder?: boolean;
+  /**
+   * When client receives an event `message.new`, we push that channel to top of the list.
+   *
+   * But If the channel doesn't exist in the list, then we get the channel from client
+   * (client maintains list of watched channels as `client.activeChannels`) and push
+   * that channel to top of the list by default. You can disallow this behavior by setting following
+   * prop to false. This is quite usefull where you have multiple tab structure and you don't want
+   * ChannelList in Tab1 to react to new message on some channel in Tab2.
+   *
+   * Default value is true.
+   */
+  allowNewMessagesFromUnfilteredChannels?: boolean;
   onMessageNew?(
     thisArg: React.Dispatch<React.SetStateAction<Client.Channel[]>>,
     e: Client.Event,
@@ -409,7 +421,7 @@ export function useMentionsHandlers(
   onMentionsClick?: (e: React.MouseEvent, user?: Client.UserResponse) => void,
 ): (
   e: React.MouseEvent<HTMLSpanElement>,
-  mentioned_users: UserResponse[],
+  mentioned_users: Client.UserResponse[],
 ) => void;
 
 export interface PaginatorProps {
@@ -446,6 +458,18 @@ export interface LoadingErrorIndicatorProps extends TranslationContextValue {
   error?: Error | null;
 }
 
+export interface MMLProps {
+  /** mml source string */
+  source: string;
+  /**
+   * submit handler for mml actions
+   * @param data {object}
+   */
+  actionHandler?(data: Record<string, any>): void;
+  /** align mml components to left/right */
+  align?: 'left' | 'right';
+}
+
 export interface AvatarProps {
   /** image url */
   image?: string | null;
@@ -480,6 +504,19 @@ export interface EmptyStateIndicatorProps extends TranslationContextValue {
 export interface SendButtonProps {
   /** Function that gets triggered on click */
   sendMessage(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void;
+}
+
+export interface SuggestionListProps {
+  className: string;
+  component: React.ElementType<unknown> | null;
+  dropdownScroll: (item: unknown) => void;
+  getSelectedItem: (<D>(item: D) => D) | null;
+  getTextToReplace: <D>(item: D) => D;
+  itemClassName: string;
+  onSelect: (newToken: unknown) => void;
+  values: Record<string, unknown>[] | null;
+  itemStyle?: React.CSSProperties;
+  value?: string;
 }
 
 export interface FixedHeightMessageProps {
@@ -618,6 +655,8 @@ export interface MessageInputProps {
   /** Disable input */
   disabled?: boolean;
   /** enable/disable firing the typing event */
+  disableMentions?: boolean;
+  /** enable/disable firing the typing event */
   publishTypingEvent?: boolean;
   /** Grow the textarea while you're typing */
   grow?: boolean;
@@ -632,8 +671,17 @@ export interface MessageInputProps {
   /** The component handling how the input is rendered */
   Input?: React.ElementType<MessageInputProps>;
 
+  /** Change the EmojiIcon component */
+  EmojiIcon?: React.ElementType;
+
+  /** Change the FileUploadIcon component */
+  FileUploadIcon?: React.ElementType;
+
   /** Change the SendButton component */
   SendButton?: React.ElementType<SendButtonProps>;
+
+  /** Override default suggestion list component */
+  SuggestionList?: React.ElementType<SuggestionListProps>;
 
   /** Override image upload request */
   doImageUploadRequest?(
@@ -661,7 +709,7 @@ export interface MessageInputProps {
    *  }}
    * />
    */
-  additionalTextareaProps?: object;
+  additionalTextareaProps?: React.TextareaHTMLAttributes;
   /** Message object. If defined, the message passed will be edited, instead of a new message being created */
   message?: Client.MessageResponse;
   /** Callback to clear editing state in parent component */
@@ -765,9 +813,9 @@ export interface BaseAttachmentUIComponentProps {
 		Examples include canceling a \/giphy command or shuffling the results.
 		*/
   actionHandler?(
-    name: string,
-    value: string,
-    event: React.BaseSyntheticEvent,
+    name: string | Record<string, any>,
+    value?: string,
+    event?: React.BaseSyntheticEvent,
   ): void;
   Card?: React.ComponentType<CardProps>;
   File?: React.ComponentType<FileAttachmentProps>;
@@ -905,6 +953,7 @@ export interface MessageUIComponentProps
   threadList?: boolean;
   additionalMessageInputProps?: object;
   initialMessage?: boolean;
+  EditMessageInput?: React.FC<MessageInputProps>;
 }
 export interface MessageDeletedProps extends TranslationContextValue {
   /** The message object */
@@ -913,20 +962,26 @@ export interface MessageDeletedProps extends TranslationContextValue {
 }
 
 export interface ThreadProps {
-  channel?: ReturnType<StreamChatReactClient['channel']>;
-  /** Display the thread on 100% width of it's container. Useful for mobile style view */
   fullWidth?: boolean;
-  /** Make input focus on mounting thread */
   autoFocus?: boolean;
   additionalParentMessageProps?: object;
   additionalMessageListProps?: object;
   additionalMessageInputProps?: object;
+  Message?: React.ElementType<MessageUIComponentProps>;
   MessageInput?: React.ElementType<MessageInputProps>;
+  ThreadHeader?: React.ElementType<ThreadHeaderProps>;
+}
+
+export interface ThreadHeaderProps {
+  closeThread?(event: React.SyntheticEvent): void;
+  t?: i18next.TFunction;
+  thread?: ReturnType<StreamChatChannelState['messageToImmutable']> | null;
 }
 
 export interface TypingIndicatorProps {
   Avatar?: React.ElementType<AvatarProps>;
   avatarSize?: number;
+  threadList?: boolean;
 }
 
 export interface ReactionSelectorProps {
@@ -1045,6 +1100,7 @@ export interface ChatAutoCompleteProps {
   grow?: boolean;
   maxRows?: number;
   disabled?: boolean;
+  disableMentions?: boolean;
   value?: string;
   handleSubmit?(event: React.FormEvent): void;
   onChange?(event: React.ChangeEventHandler): void;
@@ -1058,6 +1114,7 @@ export interface ChatAutoCompleteProps {
   onPaste?: React.ClipboardEventHandler;
   additionalTextareaProps?: object;
   innerRef: React.MutableRefObject<HTMLTextAreaElement | undefined>;
+  SuggestionList?: React.ElementType<SuggestionListProps>;
 }
 
 export interface ChatDownProps extends TranslationContextValue {
@@ -1285,9 +1342,7 @@ export class MessageInputSmall extends React.PureComponent<
   any
 > {}
 
-export class Attachment extends React.PureComponent<
-  WrapperAttachmentUIComponentProps
-> {}
+export class Attachment extends React.PureComponent<WrapperAttachmentUIComponentProps> {}
 
 export class ChannelList extends React.PureComponent<ChannelListProps> {}
 export class ChannelListMessenger extends React.PureComponent<
@@ -1310,7 +1365,8 @@ export const LoadMorePaginator: React.FC<LoadMorePaginatorProps>;
 export const InfiniteScrollPaginator: React.FC<InfiniteScrollPaginatorProps>;
 export const LoadingIndicator: React.FC<LoadingIndicatorProps>;
 
-export interface MessageCommerceProps extends MessageUIComponentProps {}
+export interface MessageCommerceProps
+  extends Omit<MessageUIComponentProps, 'EditMessageForm'> {}
 export const MessageCommerce: React.FC<MessageCommerceProps>;
 
 export interface MessageLivestreamProps extends MessageUIComponentProps {}
@@ -1427,9 +1483,9 @@ export class MessageDeleted extends React.PureComponent<
 export function useActionHandler(
   message: Client.MessageResponse | undefined,
 ): (
-  name: string,
-  value: string,
-  event: React.MouseEvent<HTMLElement>,
+  dataOrName: string | Record<string, any>,
+  value?: string,
+  event?: BaseSyntheticEvent,
 ) => Promise<void>;
 
 export function useDeleteHandler(
@@ -1528,10 +1584,8 @@ export function useUserRole(
   message: Client.MessageResponse | undefined,
 ): UserRoles & UserCapabilities;
 
-export class Thread extends React.PureComponent<
-  Omit<ThreadProps & ChannelContextValue & TranslationContextValue, 'client'>,
-  any
-> {}
+export const Thread: React.FC<ThreadProps>;
+
 export const TypingIndicator: React.FC<TypingIndicatorProps>;
 export class ReactionSelector extends React.PureComponent<
   ReactionSelectorProps,

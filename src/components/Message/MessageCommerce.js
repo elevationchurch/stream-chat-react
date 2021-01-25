@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { smartRender } from '../../utils';
 import { Attachment as DefaultAttachment } from '../Attachment';
 import { Avatar as DefaultAvatar } from '../Avatar';
+import { MML } from '../MML';
 import {
   ReactionsList as DefaultReactionsList,
   ReactionSelector as DefaultReactionSelector,
@@ -32,6 +33,7 @@ import MessageTimestamp from './MessageTimestamp';
  * @example ../../docs/MessageCommerce.md
  * @type { React.FC<import('types').MessageCommerceProps> }
  */
+// eslint-disable-next-line sonarjs/cognitive-complexity
 const MessageCommerce = (props) => {
   const {
     message,
@@ -161,6 +163,14 @@ const MessageCommerce = (props) => {
             />
           )}
 
+          {message?.mml && (
+            <MML
+              source={message.mml}
+              actionHandler={handleAction}
+              align={isMyMessage ? 'right' : 'left'}
+            />
+          )}
+
           {message?.text && (
             <MessageText
               ReactionSelector={ReactionSelector}
@@ -250,14 +260,14 @@ MessageCommerce.propTypes = {
   /** If component is in thread list */
   threadList: PropTypes.bool,
   /**
-   * Function to open thread on current messxage
+   * Function to open thread on current message
    * @deprecated The component now relies on the useThreadHandler custom hook
    * You can customize the behaviour for your thread handler on the <Channel> component instead.
    */
   handleOpenThread: PropTypes.func,
   /** Returns true if message belongs to current user */
   isMyMessage: PropTypes.func,
-  /** Returns all allowed actions on message by current user e.g., [edit, delete, flag, mute] */
+  /** Returns all allowed actions on message by current user e.g., ['edit', 'delete', 'flag', 'mute', 'react', 'reply'] */
   getMessageActions: PropTypes.func.isRequired,
   /**
    * Add or remove reaction on message

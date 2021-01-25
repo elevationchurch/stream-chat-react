@@ -1,5 +1,105 @@
 # Changelog
 
+## [3.5.2](https://github.com/GetStream/stream-chat-react/releases/tag/v3.5.2) 2021-01-21
+
+### Fix
+
+- Handle emoji picker event listener race condition [#675](https://github.com/GetStream/stream-chat-react/pull/675)
+- Adjust style for only emoji messages [#676](https://github.com/GetStream/stream-chat-react/pull/676)
+
+## [3.5.1](https://github.com/GetStream/stream-chat-react/releases/tag/v3.5.1) 2021-01-19
+
+### Fix
+
+- Upload PSD attachments as file [#673](https://github.com/GetStream/stream-chat-react/pull/673)
+
+### Chore
+
+- Bump MML-React [#674](https://github.com/GetStream/stream-chat-react/pull/674)
+
+## [3.5.0](https://github.com/GetStream/stream-chat-react/releases/tag/v3.5.0) 2021-01-15
+
+## Feature
+
+- Support typing indicator in Thread component [#662](https://github.com/GetStream/stream-chat-react/pull/662)
+- Add parent ID to typing events [#665](https://github.com/GetStream/stream-chat-react/pull/665)
+- Allow MessageInput emoji and file upload icon customization [#666](https://github.com/GetStream/stream-chat-react/pull/666)
+- Add optional `disableMentions` prop to MessageInput and update mentions UI [#669](https://github.com/GetStream/stream-chat-react/pull/669)
+
+## Fix
+
+- Fix maxLength paste text bug [#670](https://github.com/GetStream/stream-chat-react/pull/670)
+
+## [3.4.6](https://github.com/GetStream/stream-chat-react/releases/tag/v3.4.6) 2021-01-08
+
+## Feature
+
+- Add SuggestionList as MessageInput prop to override default List and Item component to display trigger suggestions [#655](https://github.com/GetStream/stream-chat-react/pull/655)
+- Add allowNewMessagesFromUnfilteredChannels prop to ChannelList [#663](https://github.com/GetStream/stream-chat-react/pull/663)
+
+## Fix
+
+- Fix type for mentions handler [#660](https://github.com/GetStream/stream-chat-react/pull/660)
+
+## Chore
+
+- Convert Thread to functional component [#650](https://github.com/GetStream/stream-chat-react/pull/650)
+- Convert messaging sample app to functional component [#661](https://github.com/GetStream/stream-chat-react/pull/661)
+
+## [3.4.5](https://github.com/GetStream/stream-chat-react/releases/tag/v3.4.5) 2021-01-07
+
+## Feature
+
+- Message components accept custom EditMessageInput component [#656](https://github.com/GetStream/stream-chat-react/pull/656)
+
+## Fix
+
+- Message actions default options doc [#654](https://github.com/GetStream/stream-chat-react/pull/654)
+- MessageList unread TypeError [#654](https://github.com/GetStream/stream-chat-react/pull/654)
+- ChannelHeader button css padding [#648](https://github.com/GetStream/stream-chat-react/pull/648)
+
+## Chore
+
+- Bump dependencies [#657](https://github.com/GetStream/stream-chat-react/pull/657) [#659](https://github.com/GetStream/stream-chat-react/pull/659)
+
+## [3.4.4](https://github.com/GetStream/stream-chat-react/releases/tag/v3.4.4) 2020-12-23
+
+## Addition
+
+- Export the UploadsPreview component. [#647](https://github.com/GetStream/stream-chat-react/pull/647)
+
+## [3.4.3](https://github.com/GetStream/stream-chat-react/releases/tag/v3.4.3) 2020-12-16
+
+## Fix
+
+- Browser bundle undefined variable
+
+## [3.4.2](https://github.com/GetStream/stream-chat-react/releases/tag/v3.4.2) 2020-12-16
+
+## Adjustment
+
+- Changes default smiley face icon for reaction selector. [#645](https://github.com/GetStream/stream-chat-react/pull/645)
+
+## [3.4.1](https://github.com/GetStream/stream-chat-react/releases/tag/v3.4.1) 2020-12-15
+
+## Feature
+
+- Adds custom UI component prop `ThreadHeader` to `Thread` to override the default header. [#642](https://github.com/GetStream/stream-chat-react/pull/642)
+
+## [3.4.0](https://github.com/GetStream/stream-chat-react/releases/tag/v3.4.0) 2020-12-14
+
+## Feature
+
+- MML is supported by default in all Message components except `MessageLiveStream`. [#562](https://github.com/GetStream/stream-chat-react/pull/562)
+
+  For more detail about how to use MML please refer to [mml-react](https://getstream.github.io/mml-react/) docs.
+
+## [3.3.2](https://github.com/GetStream/stream-chat-react/releases/tag/v3.3.2) 2020-12-11
+
+## Fix
+
+- Add error handling for `loadMoreThread` API request [#627](https://github.com/GetStream/stream-chat-react/pull/627)
+
 ## [3.3.1](https://github.com/GetStream/stream-chat-react/releases/tag/v3.3.1) 2020-12-9
 
 ## Fix
