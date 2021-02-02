@@ -591,6 +591,8 @@ export interface MessageListProps {
   /** Date separator component to render  */
   dateSeparator?: React.ElementType<DateSeparatorProps>;
   DateSeparator?: React.ElementType<DateSeparatorProps>;
+  disableDateSeparator?: boolean;
+  hideDeletedMessages?: boolean;
   /** Turn off grouping of messages by user */
   noGroupByUser?: boolean;
   /** Weather its a thread of no. Default - false  */
@@ -1340,6 +1342,7 @@ export class Channel extends React.PureComponent<ChannelProps, any> {}
 export class Avatar extends React.PureComponent<AvatarProps, any> {}
 export class Message extends React.PureComponent<MessageComponentProps, any> {}
 export class MessageList extends React.PureComponent<MessageListProps, any> {}
+export const VirtualizedMessageList: React.FC<VirtualizedMessageListProps>;
 export const ChannelHeader: React.FC<ChannelHeaderProps>;
 export class MessageInput extends React.PureComponent<MessageInputProps, any> {}
 export class MessageInputLarge extends React.PureComponent<
@@ -1742,6 +1745,7 @@ export interface TranslationContext
 export interface TranslationContextValue {
   t?: i18next.TFunction;
   tDateTimeParser?(datetime: string | number): Dayjs.Dayjs;
+  userLanguage?: string;
 }
 
 export interface Streami18nOptions {

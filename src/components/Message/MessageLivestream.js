@@ -84,7 +84,7 @@ const MessageLivestreamComponent = (props) => {
     MessageDeleted,
     PinIndicator = DefaultPinIndicator,
   } = props;
-  const { t: contextT } = useContext(TranslationContext);
+  const { t: contextT, userLanguage } = useContext(TranslationContext);
   const t = propT || contextT;
   const messageWrapperRef = useRef(null);
   const reactionSelectorRef = useRef(null);
@@ -121,11 +121,12 @@ const MessageLivestreamComponent = (props) => {
     onUserClickHandler: propOnUserClick,
     onUserHoverHandler: propOnUserHover,
   });
-  const messageTextItem = message?.text;
+  const messageTextToRender =
+    message?.i18n?.[`${userLanguage}_text`] || message?.text;
   const messageMentionedUsersItem = message?.mentioned_users;
   const messageText = useMemo(
-    () => renderText(messageTextItem, messageMentionedUsersItem),
-    [messageTextItem, messageMentionedUsersItem],
+    () => renderText(messageTextToRender, messageMentionedUsersItem),
+    [messageMentionedUsersItem, messageTextToRender],
   );
 
   const firstGroupStyle = groupStyles ? groupStyles[0] : '';
